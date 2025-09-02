@@ -1,3 +1,5 @@
+mod movies;
+
 use axum::{response::Html, routing::get, Json, Router};
 use serde::{Deserialize, Serialize};
 
