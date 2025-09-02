@@ -1,0 +1,11 @@
+services:
+  db:
+    image: postgres:17-alpine
+    ports:
+      - "6666:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: tarantinodb
+    volumes:
+      - ./tarantinodbdata:/var/lib/postgresql/tarantinodbdata
