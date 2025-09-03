@@ -2,7 +2,7 @@ services:
   db:
     image: postgres:17-alpine
     ports:
-      - "6666:5432"
+      - "7777:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1234
