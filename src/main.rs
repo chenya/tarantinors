@@ -1,15 +1,19 @@
 mod movies;
 mod store;
 
-use axum::{Json, Router, response::Html, routing::{get, post}};
+use axum::extract::State;
+use axum::{
+    Json, Router,
+    response::Html,
+    routing::{get, post},
+};
+use movies::models::MovieInput;
 use serde::{Deserialize, Serialize};
 use sqlx::postgres::{PgConnectOptions, PgPoolOptions};
 use std::str::FromStr;
-use axum::extract::State;
+use store::Store;
 use tracing::{info, instrument};
 use tracing_subscriber::{EnvFilter, filter::LevelFilter, fmt, prelude::*};
-use movies::models::MovieInput;
-use store::Store;
 fn init_tracing() {
     let rust_log = std::env::var(EnvFilter::DEFAULT_ENV)
         .unwrap_or_else(|_| "sqlx=info,tower_http=debug,info".to_string());
@@ -39,15 +43,14 @@ struct AppState {
 async fn main() {
     tracing_subscriber::fmt::init();
 
-    let app_state = AppState {
-        store: Store::new().await,
-    };
+    let store = Store::new().await;
+
+    let movies_router = movies::router(store.movies_store);
 
     let app = Router::new()
         .route("/", get(root))
         .route("/hello", get(hello_msg))
-        .route("/movies", post(add_movie))
-        .with_state(app_state);
+        .nest("/movies", movies_router);
 
     let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
         .await
@@ -55,15 +58,6 @@ async fn main() {
 
     tracing::info!("Listening on http://{}", listener.local_addr().unwrap());
     axum::serve(listener, app).await.unwrap();
-}
-
-#[instrument]
-async fn add_movie(State(state): State<AppState>, Json(new_movie): Json<MovieInput>) -> Json<Msg> {
-    state.store.insert_movie(new_movie).await.unwrap();
-    tracing::info!("Adding a movie");
-    Json(Msg {
-        message: "Movie added".to_string(),
-    })
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
