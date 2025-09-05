@@ -260,3 +260,31 @@ pub struct MovieInput {
     pub awards: Vec<MovieAwardWon>,
     pub nominations: Vec<MovieAwardNomination>,
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Actors {
+    pub actors: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Directors {
+    pub directors: Vec<String>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Producers {
+    pub producers: Vec<String>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Writers {
+    pub writers: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MovieAwards {
+    pub awards: Vec<MovieAwardWon>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MovieNominations {
+    pub nominations: Vec<MovieAwardNomination>,
+}
