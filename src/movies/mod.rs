@@ -1,35 +1,44 @@
-pub mod db;
-pub mod handlers;
-pub mod models;
-pub mod store;
+pub mod api;
+pub mod data;
+pub mod web;
 
-use crate::movies::store::MoviesStore;
 use axum::{
     Extension, Router,
     routing::{delete, get, post},
 };
+use data::store::MoviesStore;
 
-pub fn router(movie_store: MoviesStore) -> Router {
+pub fn rest_api_router(movie_store: MoviesStore) -> Router {
     let router = Router::new()
-        .route("/api", get(handlers::get_movies))
-        .route("/api", post(handlers::add_movie))
-        .route("/api/{movie_id}", get(handlers::get_movie))
-        .route("/api/{movie_id}/actors", get(handlers::get_movie_actors))
+        .route("/movies", get(api::handlers::get_movies))
+        .route("/movies", post(api::handlers::add_movie))
+        .route("/movies/{movie_id}", get(api::handlers::get_movie))
         .route(
-            "/api/{movie_id}/directors",
-            get(handlers::get_movie_directors),
+            "/movies/{movie_id}/actors",
+            get(api::handlers::get_movie_actors),
         )
         .route(
-            "/api/{movie_id}/producers",
-            get(handlers::get_movie_producers),
+            "/movies/{movie_id}/directors",
+            get(api::handlers::get_movie_directors),
         )
-        .route("/api/{movie_id}/writers", get(handlers::get_movie_writers))
-        .route("/api/{movie_id}/awards", get(handlers::get_movie_awards))
         .route(
-            "/api/{movie_id}/nominations",
-            get(handlers::get_movie_nominations),
+            "/movies/{movie_id}/producers",
+            get(api::handlers::get_movie_producers),
         )
-        .route("/api/{movie_id}", delete(handlers::remove_movie))
+        .route(
+            "/movies/{movie_id}/writers",
+            get(api::handlers::get_movie_writers),
+        )
+        .route(
+            "/movies/{movie_id}/awards",
+            get(api::handlers::get_movie_awards),
+        )
+        .route(
+            "/movies/{movie_id}/nominations",
+            get(api::handlers::get_movie_nominations),
+        )
+        .route("/movies/{movie_id}", delete(api::handlers::remove_movie))
+        .fallback(api::handlers::fallback_handler)
         .layer(Extension(movie_store));
 
     router

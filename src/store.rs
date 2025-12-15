@@ -1,19 +1,8 @@
-use crate::movies::models::{
-    CreateAward, CreateGenre, CreateMovie, CreatePerson, MovieInput, Person,
-};
+use sqlx::postgres::{PgPool, PgPoolOptions};
 
-use serde::Deserialize;
-use sqlx::postgres::{PgConnectOptions, PgPool, PgPoolOptions};
+use crate::movies::data::store::MoviesStore;
 
-use crate::movies::db::{
-    create_actor, create_award, create_award_category, create_director, create_genre, create_movie,
-    create_movie_award, create_movie_genre, create_movie_nomination, create_person,
-    create_producer, create_writer,
-};
-
-use crate::movies::store::MoviesStore;
-
-async fn init_dbpool() -> Result<sqlx::Pool<sqlx::Postgres>, sqlx::Error> {
+pub async fn init_dbpool() -> Result<sqlx::Pool<sqlx::Postgres>, sqlx::Error> {
     let db_connection_str = std::env::var("DATABASE_URL")
         .unwrap_or_else(|_| "postgresql://postgres:1234@localhost:7777/tarantinodb".to_string());
 
