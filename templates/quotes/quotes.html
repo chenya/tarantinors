@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Quentin Tarantino Quotes{% endblock %}
+
+{% block content %}
+<section id="quotes">
+    <h2>Quotes</h2>
+    {% for quote in quotes %}
+    <div class="quote-card">
+        <p>"{{ quote.text }}"</p>
+        <footer>- Quentin Tarantino</footer>
+    </div>
+    {% endfor %}
+</section>
+{% endblock %}

@@ -1,0 +1,36 @@
+<!-- templates/error.html -->
+{% extends "base.html" %}
+
+{% block title %}Error {{ error.code }} {% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg">
+        <div class="flex items-center mb-4">
+            <svg class="w-8 h-8 text-red-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clip-rule="evenodd" />
+            </svg>
+            <h2 class="text-2xl font-bold text-red-800">Error {{ error_code }}</h2>
+        </div>
+
+        <p class="text-red-700 text-lg mb-4">{{ error.message }}</p>
+
+        {% if let Some(details) = error.details %}
+        <details class="mt-4">
+            <summary class="cursor-pointer text-red-600 font-semibold">
+                Technical Details (Debug Mode)
+            </summary>
+            <pre class="mt-2 p-4 bg-red-100 rounded text-sm overflow-x-auto">{{ details }}</pre>
+        </details>
+        {% endif %}
+
+        <div class="mt-6">
+            <a href="/" class="inline-block bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
+                ← Back to Home
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

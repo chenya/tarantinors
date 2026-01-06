@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore the filmography of Quentin Tarantino.">
+    <title>{% block title %}Sample Hello{% endblock %}</title>
+
+    <!-- Styles -->
+
+
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Montserrat:wght@400;700&display=swap"
+        rel="stylesheet">
+    <!-- <link href="/static/css/output.css" rel="stylesheet"> -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- HTMX -->
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"
+        integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz"
+        crossorigin="anonymous"></script>
+</head>
+
+<body class="m-0 p-0 font-[Montserrat] bg-[#0d0d0d] text-[#eaeaea] bg-cover bg-blend-multiply">
+
+
+
+    {% block main %}
+    <h1 class="max-w-3xl mx-auto text-center">
+        <span class="block text-3xl sm:text-4xl md:text-5xl font-extrabold mb-3 tracking-tight uppercase leading-tight">
+            <span
+                class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-pink-400 to-yellow-300 drop-shadow-sm">
+                Welcome
+            </span>
+            <span class="inline-block ml-3 w-2 h-2 rounded-full bg-pink-400/80 shadow-sm align-middle"></span>
+        </span>
+
+        <div
+            class="inline-flex items-center gap-4 px-4 py-3 bg-white/6 backdrop-blur-sm rounded-2xl shadow-lg transition-transform hover:scale-[1.02]">
+            <!-- prettier 'Hello' badge -->
+            <span class="flex items-center gap-3">
+                <span
+                    class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-500 to-pink-500 shadow-md">
+                    <svg aria-hidden="true" class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2l1.9 4.9L19 8l-4 3.1L15 16l-3-1.8L9 16l0-4.9L5 8l5.1-1.1L12 2z"></path>
+                    </svg>
+                </span>
+                <span class="text-lg sm:text-xl font-semibold text-gray-100 tracking-wide">Hello</span>
+            </span>
+
+            <span
+                class="ml-2 text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight
+                      bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-pink-400 to-yellow-400 drop-shadow-md">
+                {{ name }}
+            </span>
+        </div>
+
+        <span
+            class="block mx-auto mt-4 w-24 h-1 rounded-full bg-gradient-to-r from-indigo-400 to-pink-400/80 opacity-90"></span>
+    </h1>
+    {% endblock %}
+
+</body>
+
+</html>

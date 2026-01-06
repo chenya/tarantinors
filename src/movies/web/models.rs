@@ -1,58 +1,73 @@
+use chrono::{NaiveDate, NaiveDateTime};
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct WebAward {
-    pub name: String,
-    pub category: String,
-    pub year: u16,
-}
-
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct WebNomination {
-    pub name: String,
-    pub category: String,
-    pub year: u16,
-}
-
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct WebMovie {
-    // pub id: usize,
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct MovieViewModel {
+    pub id: i32,
     pub title: String,
-    pub release_year: u16,
+    pub release_year: i32,
     pub genre: String,
-    pub director: String,
     pub plot: String,
-    pub runtime: u16,
+    pub runtime: i32,
     pub rating: f32,
-    pub release_date: String,
+    pub release_date: NaiveDate,
     pub image_url: String,
     pub youtube_id: String,
     pub production_details: String,
-    pub awards: Vec<WebAward>,
-    pub nominations: Vec<WebNomination>,
     pub budget: String,
+    pub directors: Vec<String>,
     pub producers: Vec<String>,
     pub actors: Vec<String>,
     pub writers: Vec<String>,
+    pub awards: Vec<MovieAwardViewModel>,
+    pub nominations: Vec<MovieAwardNominationViewModel>,
 }
 
-impl WebMovie {
-    pub fn has_producers(&self) -> bool {
-        !self.producers.is_empty()
+impl MovieViewModel {
+    pub fn has_directors(&self) -> bool {
+        !self.directors.is_empty()
     }
 
     pub fn has_actors(&self) -> bool {
         !self.actors.is_empty()
     }
 
+    pub fn has_producers(&self) -> bool {
+        !self.producers.is_empty()
+    }
+
     pub fn has_writers(&self) -> bool {
         !self.writers.is_empty()
-    }
-    pub fn has_nominations(&self) -> bool {
-        !self.nominations.is_empty()
     }
 
     pub fn has_awards(&self) -> bool {
         !self.awards.is_empty()
     }
+
+    pub fn has_nominations(&self) -> bool {
+        !self.nominations.is_empty()
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct MovieAwardViewModel {
+    pub name: String,
+    pub category: String,
+    pub year: i32,
+    pub recipient: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct MovieAwardNominationViewModel {
+    pub name: String,
+    pub category: String,
+    pub year: i32,
+    pub nominee: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct ErrorViewModel {
+    pub code: u16,
+    pub message: String,
+    pub details: Option<String>,
 }

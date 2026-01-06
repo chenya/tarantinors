@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore the filmography of Quentin Tarantino.">
+    <title>{% block title %}Quentin Tarantino Films HTMX{% endblock %}</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Montserrat:wght@400;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- HTMX -->
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"
+        integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz"
+        crossorigin="anonymous"></script>
+</head>
+
+<body class="m-0 p-0 font-[Montserrat] bg-[#0d0d0d] text-[#eaeaea] bg-cover bg-blend-multiply">
+
+    {% include "partials/htmx/base_header.html" %}
+
+    <main class="bg-neutral-800">
+        {% block main %}{% endblock %}
+
+    </main>
+
+
+
+    {% include "partials/htmx/base_footer.html" %}
+
+</body>
+
+</html>

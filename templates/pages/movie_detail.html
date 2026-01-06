@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ movie.title }} - Quentin Tarantino Films
+{% endblock %}
+
+{% block main %}
+<section id="movie-{{ movie.id }}"
+    class="py-15 px-5 text-center border-t-[3px] border-b-[3px] border-t-[#FFC107] border-b-[#FFC107] border-solid">
+    <div
+        class="bg-[#333] p-5 border-[3px] border-[#E50914]  border-solid rounded-xl shadow-2xl text-left flex flex-col items-center max-w-200 my-0 mx-auto">
+        <h2 class="font-[Special_Elite] text-4xl text-yellow-400 mb-5 text-shadow-[3px_3px_#000]">{{ movie.title }}</h2>
+        <img src="{{ movie.image_url }}" alt="{{ movie.title }}" class="max-w-full rounded-lg mb-5 shadow-lg">
+        <div class="movie-info">
+
+            <p class="text-xl leading-normal mb-2.5 text-gray-200">
+                <strong class="text-yellow-400">Release Year:</strong> {{ movie.release_year }}
+            </p>
+            <p class="text-xl leading-normal mb-2.5 text-gray-200">
+                <strong class="text-yellow-400">Genre:</strong> {{ movie.genre }}
+            </p>
+
+
+            <!-- Directors List -->
+            <p class="text-xl leading-normal mb-2.5 text-gray-200">
+                <strong class="text-yellow-400">Directors:</strong>
+            </p>
+
+            <ul class="list-none p-0 my-2.5 mx-0">
+                {% if movie.has_directors() %}
+                {% for director in movie.directors %}
+                <li class="text-xl text-gray-200 mb-[5px]">{{ director }}</li>
+                {% endfor %}
+                {% else %}
+                <li class="text-xl text-gray-200 mb-[5px]">No directors listed.</li>
+                {% endif %}
+            </ul>
+
+            <!-- Producers List -->
+            <p class="text-xl leading-normal mb-2.5 text-gray-200">
+                <strong class="text-yellow-400">Producers:</strong>
+            </p>
+
+            <ul class="list-none p-0 my-2.5 mx-0">
+                {% if movie.has_producers() %}
+                {% for producer in movie.producers %}
+                <li class="text-xl text-gray-200 mb-[5px]">{{ producer }}</li>
+                {% endfor %}
+                {% else %}
+                <li class="text-xl text-gray-200 mb-[5px]">No producers listed.</li>
+                {% endif %}
+            </ul>
+
+            <!-- Cast List (Actors) -->
+            <p class="text-xl leading-normal mb-2.5 text-gray-200">
+                <strong class="text-yellow-400">Cast:</strong>
+            </p>
+            <ul class="list-none p-0 my-2.5 mx-0">
+                {% if movie.has_actors() %}
+                {% for actor in movie.actors %}
+                <li class="text-xl text-gray-200 mb-[5px]">{{ actor }}</li>
+                {% endfor %}
+                {% else %}
+                <li class="text-xl text-gray-200 mb-[5px]">No cast listed.</li>
+                {% endif %}
+            </ul>
+
+            <!-- Writers List -->
+            <p class="text-xl leading-normal mb-2.5 text-gray-200">
+                <strong class="text-yellow-400">Writers:</strong>
+            </p>
+            <ul class="list-none p-0 my-2.5 mx-0">
+                {% if movie.has_writers() %}
+                {% for writer in movie.writers %}
+                <li class="text-xl text-gray-200 mb-[5px]">{{ writer }}</li>
+                {% endfor %}
+                {% else %}
+                <li class="text-xl text-gray-200 mb-[5px]">No writers listed.</li>
+                {% endif %}
+            </ul>
+            <p class="text-xl leading-normal mb-2.5 text-gray-200">
+                <strong class="text-yellow-400">Runtime:</strong> {{ movie.runtime }} mins
+            </p>
+            <p class="text-xl leading-normal mb-2.5 text-gray-200">
+                <strong class="text-yellow-400">Rating:</strong> {{ movie.rating }}/10
+            </p>
+            <p class="text-xl leading-normal mb-2.5 text-gray-200">
+                <strong class="text-yellow-400">Plot:</strong> {{ movie.plot }}
+            </p>
+            <p class="text-xl leading-normal mb-2.5 text-gray-200">
+                <strong class="text-yellow-400">Budget:</strong> {{ movie.budget }}
+            </p>
+        </div>
+    </div>
+</section>
+
+<section id="trailers-{{ movie.id }}"
+    class="py-15 px-5 text-center border-t-[3px] border-t-[#E50914]  border-t-solid border-b-[3px] border-b-[#E50914]  border-b-solid flex flex-col items-center">
+    <h2
+        class="font-[Special_Elite] text-center text-4xl text-yellow-400 mb-10 text-shadow-[0_3px_3px_rgb(0_0_0)] flex justify-center">
+        Trailer</h2>
+    <div class=" w-full flex justify-center">
+        <iframe class="w-full max-w-200 h-113 border-none rounded-lg shadow-[0_5px_15px_rgba(0,0,0,0.7)] max-md:h-75"
+            width="1280" height="768" src="https://www.youtube.com/embed/{{ movie.youtube_id }}"
+            title="{{ movie.title }} Trailer" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+        </iframe>
+    </div>
+</section>
+
+<section id="advanced-details-{{ movie.id }}"
+    class="py-15 px-5 text-center bg-neutral-800bg-[#2B2B2B] border-t-[3px] border-t-[#E50914]  border-t-solid border-b-[3px] border-b-[#E50914]  border-b-solid flex flex-col items-center">
+    <h2 class="font-[Special_Elite] text-4xl text-yellow-400 mb-5 text-shadow-[0_3px_3px_rgb(0_0_0)] flex">Awards and
+        Nominations</h2>
+    <div class="max-w-300 mx-auto my-0  justify-between gap-10 flex flex-wrap">
+        <div class="flex flex-wrap justify-between">
+
+            <div class="bg-[#1E1E1E]  flex-1 min-w-75 p-5 rounded-[10px] 
+                                    shadow-[0_5px_15px_rgba(0,0,0,0.7)] border-[3px] 
+                                    border-[#E50914]  border-solid">
+                <h3 class="font-[Special_Elite] text-3xl text-yellow-400 
+                                        mb-5 text-shadow-[0_2px_2px_rgb(0_0_0)]">Nominations</h3>
+                {% if movie.has_nominations() %}
+                {% for nomination in movie.nominations %}
+                <div class="mb-[15px] pb-2.5 border border-[#444]  border-none">
+                    <p class="text-xl leading-normal text-[#EAEAEA] mx-0 my-[5px]">
+                        <strong class="text-yellow-400">{{ nomination.year }}</strong> - <span
+                            class="text-[#E70303] text-shadow-[0_2px_2px_rgb(0_0_0)] font-bold">{{ nomination.name
+                            }}</span>
+                    </p>
+                    <p class="text-xl leading-normal mx-0 my-[5px] text-gray-200">
+                        <span class="italic font-semibold mr-2">Category:</span> {{ nomination.category }}
+                    </p>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p>No nominations listed.</p>
+                {% endif %}
+            </div>
+
+            <div class="bg-[#1E1E1E] flex-1 min-w-75 p-5 rounded-[10px] 
+                                    shadow-[0_5px_15px_rgba(0,0,0,0.7)] border-[3px] 
+                                    border-[#E50914]  border-solid">
+                <h3 class="font-[Special_Elite] text-3xl text-yellow-400 
+                                        mb-5 text-shadow-[0_2px_2px_rgb(0_0_0)]">Awards</h3>
+                {% if movie.has_awards() %}
+                {% for award in movie.awards %}
+                <div class="mb-[15px] pb-2.5 border border-[#444]  border-none">
+                    <p class="text-xl leading-normal text-[#EAEAEA] mx-0 my-[5px]">
+                        <strong class="text-yellow-400">{{ award.year }}</strong> - <span
+                            class="text-[#E70303] text-shadow-[0_2px_2px_rgb(0_0_0)] font-bold">{{ award.name }}</span>
+                    </p>
+                    <p class="text-xl leading-normal  mx-0 my-[5px] text-gray-200">
+                        <span class="italic font-semibold mr-2">Category:</span> {{ award.category }}
+                    </p>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p>No awards listed.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

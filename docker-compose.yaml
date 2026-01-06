@@ -9,3 +9,14 @@ services:
       POSTGRES_DB: tarantinodb
     volumes:
       - ./tarantinodbdata:/var/lib/postgresql/tarantinodbdata
+
+  dbtest:
+    image: postgres:17-alpine
+    ports:
+      - "8888:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: test_tarantinodb
+    volumes:
+      - ./test_tarantinodbdata:/var/lib/postgresql/test_tarantinodbdata

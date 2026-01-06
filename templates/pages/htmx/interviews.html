@@ -1,0 +1,22 @@
+<section id="interviews">
+    <div class="interviews-header">
+        <h2>Interviews</h2>
+        <p>Explore insightful conversations and interviews with Quentin Tarantino</p>
+    </div>
+    <div class="interviews-list">
+        {% for interview in interviews %}
+        <div class="interview-row">
+            <div class="interview-row-content">
+                <h3>{{ interview.title }}</h3>
+                <p>{{ interview.description }}</p>
+                <div class="youtube-embed-container">
+                    <iframe src="https://www.youtube.com/embed/{{ interview.youtube_id }}" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>

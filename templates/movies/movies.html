@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}
+Home - Quentin Tarantino Films
+{% endblock %}
+
+{% block content %}
+<section id="filmography">
+    <h2>Filmography</h2>
+    <div class="film-grid">
+        {% for movie in movies %}
+        <div class="film-card">
+            <h3>{{ movie.title }}</h3>
+            {# <a href="{% url 'main:movie_detail' movie.id %}" class="film-card-link"> #}
+                <img src="{{ movie.image_url }}" alt="{{ movie.title }}">
+            {# </a> #}
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

@@ -43,3 +43,12 @@ pub fn rest_api_router(movie_store: MoviesStore) -> Router {
 
     router
 }
+
+pub fn web_router(movie_store: MoviesStore) -> Router {
+    let router = Router::new()
+        .route("/", get(web::handlers::list_movies))
+        .route("/{movie_id}", get(web::handlers::movie_details))
+        .layer(Extension(movie_store));
+
+    router
+}

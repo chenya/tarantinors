@@ -1,6 +1,6 @@
 mod movies;
 mod store;
-
+// mod tests;
 use axum::extract::Path;
 use movies::{api::handlers::MoviesApiDoc, data::store::MoviesStore};
 
@@ -83,12 +83,14 @@ async fn main() {
     let movies_api_router = movies::rest_api_router(MoviesStore {
         connection: dbpool.clone(),
     });
+    let movies_web_router = movies::web_router(MoviesStore {
+        connection: dbpool.clone(),
+    });
 
     let app = Router::new()
         .route("/", get(root))
-        .route("/hello", get(hello_msg))
-        .route("/hello/{name}", get(hello_name))
         .nest("/api/v1", movies_api_router)
+        .nest("/movies", movies_web_router)
         .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDoc::openapi()))
         .nest_service("/static", ServeDir::new("static"))
         .layer(
@@ -148,4 +150,25 @@ async fn hello_msg() -> Json<Msg> {
     Json(Msg {
         message: "Hello, World!".to_string(),
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use axum::response::IntoResponse;
+    use axum::{body::Body, http::Request};
+    use http_body_util::BodyExt;
+    use tower::ServiceExt; // for `oneshot`
+
+    #[tokio::test]
+    async fn test_hello_msg() {
+        let response = hello_msg().await.into_response();
+
+        assert_eq!(response.status(), 200);
+
+        let body = response.into_body().collect().await.unwrap().to_bytes();
+        let body_str = String::from_utf8(body.to_vec()).unwrap();
+
+        assert!(body_str.contains("Hello, World!"));
+    }
 }

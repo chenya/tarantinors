@@ -1,0 +1,958 @@
+ /* Global Styles */
+ body {
+     margin: 0;
+     padding: 0;
+     font-family: 'Montserrat', sans-serif;
+     background-color: #0D0D0D;
+     color: #EAEAEA;
+     background-image: "{{ url_for('static', filename='grunge-texture.png') }}";
+     background-size: cover;
+     background-blend-mode: multiply;
+ }
+
+ /* Header */
+ header {
+     background-color: #2B2B2B;
+     padding: 40px 20px;
+     text-align: center;
+     border-bottom: 3px solid #E50914;
+     position: relative;
+ }
+
+ header h1 {
+     font-family: 'Special Elite', cursive;
+     font-size: 3.5em;
+     margin: 0;
+     color: #FFC107;
+     text-shadow: 4px 4px #000;
+ }
+
+ nav ul {
+     list-style-type: none;
+     margin: 0;
+     padding: 0;
+     display: flex;
+     justify-content: center;
+     gap: 25px;
+     margin-top: 20px;
+ }
+
+ nav ul li a {
+     text-decoration: none;
+     color: #FFC107;
+     font-size: 1.2em;
+     letter-spacing: 1px;
+     font-family: 'Special Elite', cursive;
+     transition: color 0.3s, transform 0.3s;
+ }
+
+ nav ul li a:hover {
+     color: #E50914;
+     transform: scale(1.1);
+ }
+
+ /* Filmography Section */
+ #filmography {
+     padding: 60px 20px;
+     /* Increased padding for better spacing */
+     text-align: center;
+     background-color: #1E1E1E;
+     border-top: 3px solid #FFC107;
+     /* Thicker border for more impact */
+     border-bottom: 3px solid #FFC107;
+     position: relative;
+     /* Positioning for background effect */
+     overflow: hidden;
+     /* Ensure elements do not overflow */
+ }
+
+ #filmography h2 {
+     font-family: 'Special Elite', cursive;
+     font-size: 3em;
+     /* Larger font size for emphasis */
+     color: #E50914;
+     margin-bottom: 40px;
+     text-shadow: 3px 3px #000;
+     /* Stronger text shadow for more prominence */
+ }
+
+ /* Film Grid */
+ .film-grid {
+     display: grid;
+     grid-template-columns: repeat(5, 1fr);
+     /* Fixed 5 columns per row */
+     gap: 20px;
+     /* Adjust gap between items */
+     padding: 20px;
+     box-sizing: border-box;
+ }
+
+ /* Film Card Design */
+ .film-card {
+     background-color: #333;
+     padding: 20px;
+     border-radius: 12px;
+     transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+     position: relative;
+     overflow: hidden;
+     border: 3px solid #E50914;
+     text-align: left;
+     display: flex;
+     flex-direction: column;
+     align-items: stretch;
+     max-width: 100%;
+     /* Change cursor to pointer to indicate it's clickable */
+     cursor: pointer;
+     /* Makes sure the card takes up the full space within the link */
+     flex-grow: 1;
+
+ }
+
+ /* Film Card Title */
+ .film-card h3 {
+     font-family: 'Special Elite', cursive;
+     font-size: 1.8em;
+     color: #FFC107;
+     margin: 15px 0 5px;
+     text-shadow: 2px 2px #000;
+     white-space: nowrap;
+     /* Prevent text wrapping */
+     overflow: hidden;
+     /* Hide overflow */
+     text-overflow: ellipsis;
+     /* Add ellipsis for overflowing text */
+     letter-spacing: 1px;
+ }
+
+ /* Film Card Image Styling */
+ .film-card img {
+     max-width: 100%;
+     border-radius: 8px;
+     /* Slightly rounded corners for images */
+     transition: transform 0.3s ease;
+     /* Smooth transitions for hover effects */
+     /* height: 350px; */
+
+ }
+
+ /* Film Card Details */
+ .film-card-details {
+     opacity: 1;
+     /* Always visible */
+     padding-top: 10px;
+     color: #EAEAEA;
+ }
+
+ /* Film Card Details Paragraphs */
+ .film-card-details p {
+     margin: 5px 0;
+     font-size: 1em;
+     line-height: 1.5;
+ }
+
+ /* Hover Effect for Film Card */
+ .film-card:hover {
+     transform: scale(1.05);
+     /* Slight zoom effect */
+     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9);
+     /* Darker and more intense shadow */
+     border-color: #FFC107;
+     /* Highlight border color on hover */
+     background-color: #444;
+     /* Slightly lighter background on hover */
+ }
+
+ /* Hover Effect for Image */
+ .film-card:hover img {
+     filter: grayscale(0%);
+     /* Remove grayscale effect on hover */
+     transform: scale(1.05);
+     /* Slight zoom effect on image */
+ }
+
+ .film-card-link {
+     text-decoration: none;
+     color: inherit;
+     display: flex;
+     /* Makes the link act like a flex container */
+     flex-direction: column;
+     /* Ensures the content is stacked vertically */
+     justify-content: flex-start;
+     align-items: stretch;
+ }
+
+ /* Responsive adjustments */
+ @media (max-width: 1200px) {
+     .film-grid {
+         grid-template-columns: repeat(4, 1fr);
+         /* 4 columns for medium screens */
+     }
+ }
+
+ @media (max-width: 900px) {
+     .film-grid {
+         grid-template-columns: repeat(3, 1fr);
+         /* 3 columns for smaller screens */
+     }
+ }
+
+ @media (max-width: 600px) {
+     .film-grid {
+         grid-template-columns: repeat(2, 1fr);
+         /* 2 columns for extra small screens */
+     }
+ }
+
+ @media (max-width: 400px) {
+     .film-grid {
+         grid-template-columns: 1fr;
+         /* 1 column for very small screens */
+     }
+ }
+
+ /* Footer */
+ footer {
+     background-color: #333;
+     padding: 20px;
+     text-align: center;
+     border-top: 3px solid #E50914;
+ }
+
+ footer p {
+     margin: 0;
+     font-size: 1em;
+     color: #EAEAEA;
+     font-family: 'Special Elite', cursive;
+     text-shadow: 1px 1px #000;
+
+ }
+
+ /* Movie Details Section */
+ .movie-details {
+     padding: 60px 20px;
+     text-align: center;
+     background-color: #1E1E1E;
+     border-top: 3px solid #FFC107;
+     border-bottom: 3px solid #FFC107;
+ }
+
+ .movie-card {
+     background-color: #333;
+     padding: 20px;
+     border-radius: 12px;
+     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+     border: 3px solid #E50914;
+     text-align: left;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     max-width: 800px;
+     margin: 0 auto;
+ }
+
+ .movie-card img {
+     max-width: 100%;
+     border-radius: 8px;
+     margin-bottom: 20px;
+     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+ }
+
+ .movie-card h2 {
+     font-family: 'Special Elite', cursive;
+     font-size: 2.5em;
+     color: #FFC107;
+     margin-bottom: 20px;
+     text-shadow: 3px 3px #000;
+ }
+
+ .movie-card p {
+     font-size: 1.2em;
+     line-height: 1.5;
+     margin-bottom: 10px;
+     color: #EAEAEA;
+ }
+
+ .movie-info p strong {
+     color: #FFC107;
+ }
+
+ /* Trailer Section */
+ .trailer-section {
+     padding: 60px 20px;
+     text-align: center;
+     background-color: #2B2B2B;
+     border-top: 3px solid #E50914;
+     border-bottom: 3px solid #E50914;
+ }
+
+ .trailer-section h2 {
+     font-family: 'Special Elite', cursive;
+     font-size: 2.5em;
+     color: #FFC107;
+     margin-bottom: 40px;
+     text-shadow: 3px 3px #000;
+ }
+
+
+ .trailer-container iframe {
+     width: 100%;
+     max-width: 800px;
+     height: 450px;
+     border: none;
+     border-radius: 8px;
+     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
+ }
+
+ /* Behind the Scenes Section */
+ .bts-section {
+     padding: 60px 20px;
+     text-align: center;
+     background-color: #1E1E1E;
+     border-top: 3px solid #FFC107;
+     border-bottom: 3px solid #FFC107;
+ }
+
+ .behind-the-scenes-content p {
+     font-size: 1.2em;
+     line-height: 1.5;
+     margin-bottom: 20px;
+     color: #EAEAEA;
+ }
+
+ .behind-the-scenes-content img {
+     max-width: 100%;
+     border-radius: 8px;
+     margin-top: 20px;
+     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+ }
+
+ /* Advanced Details Section */
+ .advanced-details-section {
+     padding: 60px 20px;
+     text-align: center;
+     background-color: #2B2B2B;
+     border-top: 3px solid #E50914;
+     border-bottom: 3px solid #E50914;
+ }
+
+ .advanced-details-section h2 {
+     font-family: 'Special Elite', cursive;
+     font-size: 2.5em;
+     color: #FFC107;
+     margin-bottom: 40px;
+     text-shadow: 3px 3px #000;
+ }
+
+ .advanced-details-content {
+     max-width: 1200px;
+     margin: 0 auto;
+     display: flex;
+     justify-content: space-between;
+     gap: 40px;
+     flex-wrap: wrap;
+ }
+
+ .awards-nominations-grid {
+     display: flex;
+     flex-wrap: wrap;
+     justify-content: space-between;
+ }
+
+ .awards-column,
+ .nominations-column {
+     flex: 1;
+     min-width: 300px;
+     background-color: #1E1E1E;
+     padding: 20px;
+     border-radius: 10px;
+     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
+     border: 3px solid #FFC107;
+ }
+
+ .awards-column h3,
+ .nominations-column h3 {
+     font-family: 'Special Elite', cursive;
+     font-size: 2em;
+     color: #FFC107;
+     margin-bottom: 20px;
+     text-shadow: 2px 2px #000;
+ }
+
+ .award-item,
+ .nomination-item {
+     margin-bottom: 15px;
+     padding-bottom: 10px;
+     border-bottom: 1px solid #444;
+ }
+
+ .award-item p,
+ .nomination-item p {
+     font-size: 1.2em;
+     line-height: 1.5;
+     color: #EAEAEA;
+     margin: 5px 0;
+ }
+
+ .award-item p strong,
+ .nomination-item p strong {
+     color: #FFC107;
+ }
+
+ .award-item p span,
+ .nomination-item p span {
+     color: #FFC107;
+     /* A brighter gold tone */
+     text-shadow: 2px 2px #333;
+     /* A deeper shadow for contrast */
+ }
+
+ .award-item p span,
+ .nomination-item p span {
+     color: #e70303;
+     /* Bright gold color for prominence */
+     text-shadow: 2px 2px #000;
+     /* Stronger shadow for a more impactful effect */
+     font-weight: bold;
+     /* Make the text bold to emphasize the award name */
+ }
+
+
+ /* Footer */
+ footer {
+     background-color: #333;
+     padding: 20px;
+     text-align: center;
+     border-top: 3px solid #E50914;
+ }
+
+ footer p {
+     margin: 0;
+     font-size: 1em;
+     color: #EAEAEA;
+     font-family: 'Special Elite', cursive;
+     text-shadow: 1px 1px #000;
+ }
+
+ /* Responsive adjustments */
+ @media (max-width: 800px) {
+     .movie-card img {
+         width: 100%;
+         height: auto;
+     }
+
+     .trailer-container iframe {
+         height: 300px;
+     }
+ }
+
+ /* Movie Info List */
+ .movie-info-list {
+     list-style-type: none;
+     padding: 0;
+     margin: 10px 0;
+ }
+
+ .movie-info-list li {
+     font-size: 1.2em;
+     color: #EAEAEA;
+     margin-bottom: 5px;
+ }
+
+
+
+ /* add_movie.html style */
+ /* Movie Form Section */
+ .movie-form-section {
+     padding: 60px 20px;
+     background-color: #1E1E1E;
+     border-top: 3px solid #FFC107;
+     border-bottom: 3px solid #FFC107;
+     text-align: center;
+ }
+
+ .movie-form-section h2 {
+     font-family: 'Special Elite', cursive;
+     font-size: 2.5em;
+     color: #FFC107;
+     margin-bottom: 40px;
+     text-shadow: 3px 3px #000;
+ }
+
+ .movie-form {
+     max-width: 800px;
+     margin: 0 auto;
+     background-color: #333;
+     padding: 20px;
+     border-radius: 12px;
+     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+     border: 3px solid #E50914;
+     text-align: left;
+ }
+
+ .form-group {
+     margin-bottom: 20px;
+ }
+
+ .form-group label {
+     display: block;
+     font-size: 1.2em;
+     color: #FFC107;
+     margin-bottom: 5px;
+ }
+
+ .form-group input,
+ .form-group textarea {
+     width: 100%;
+     padding: 10px;
+     border: 2px solid #E50914;
+     border-radius: 8px;
+     background-color: #1E1E1E;
+     color: #EAEAEA;
+     font-size: 1em;
+ }
+
+ .form-group textarea {
+     resize: vertical;
+ }
+
+ .submit-btn {
+     background-color: #E50914;
+     color: #EAEAEA;
+     font-size: 1.2em;
+     padding: 10px 20px;
+     border: none;
+     border-radius: 8px;
+     cursor: pointer;
+     transition: background-color 0.3s, transform 0.3s;
+ }
+
+ .submit-btn:hover {
+     background-color: #FFC107;
+     transform: scale(1.05);
+ }
+
+ /* Quotes Section */
+ #quotes {
+     padding: 60px 20px;
+     text-align: center;
+     background-color: #1E1E1E;
+     border-top: 3px solid #FFC107;
+     border-bottom: 3px solid #FFC107;
+ }
+
+ #quotes h2 {
+     font-family: 'Special Elite', cursive;
+     font-size: 3em;
+     color: #E50914;
+     margin-bottom: 40px;
+     text-shadow: 3px 3px #000;
+ }
+
+ /* Quote Card Design */
+ .quote-card {
+     background-color: #333;
+     padding: 20px;
+     border-radius: 12px;
+     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+     border: 3px solid #E50914;
+     margin: 20px auto;
+     max-width: 800px;
+     text-align: center;
+ }
+
+ .quote-card p {
+     font-size: 1.5em;
+     line-height: 1.5;
+     color: #EAEAEA;
+     margin-bottom: 15px;
+ }
+
+ .quote-card footer {
+     font-size: 1.2em;
+     color: #FFC107;
+     font-family: 'Special Elite', cursive;
+ }
+
+ /* Responsive adjustments */
+ @media (max-width: 800px) {
+     .quote-card p {
+         font-size: 1.2em;
+     }
+ }
+
+ /* Interviews Section */
+ #interviews {
+     padding: 100px 20px;
+     background-color: #1E1E1E;
+     border-top: 5px solid #FFC107;
+     border-bottom: 5px solid #FFC107;
+     background-image: url('path/to/textured-background.png');
+     /* Adds a cinematic texture */
+     background-size: cover;
+ }
+
+ .interviews-header {
+     text-align: center;
+     margin-bottom: 70px;
+ }
+
+ .interviews-header h2 {
+     font-family: 'Special Elite', cursive;
+     font-size: 4em;
+     color: #E50914;
+     margin: 0;
+     text-shadow: 5px 5px #000;
+     transition: color 0.3s;
+ }
+
+ .interviews-header h2:hover {
+     color: #FFC107;
+ }
+
+ .interviews-grid {
+     display: grid;
+     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+     gap: 40px;
+     max-width: 1200px;
+     margin: 0 auto;
+ }
+
+ .interview-card {
+     background-color: #2B2B2B;
+     border-radius: 12px;
+     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
+     border: 4px solid transparent;
+     overflow: hidden;
+     transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+     position: relative;
+     cursor: pointer;
+ }
+
+ .interview-card:hover {
+     transform: translateY(-10px);
+     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+     border-color: #FFC107;
+ }
+
+ .interview-card-image img {
+     width: 100%;
+     height: auto;
+     display: block;
+     transition: transform 0.3s;
+ }
+
+ .interview-card:hover .interview-card-image img {
+     transform: scale(1.05);
+ }
+
+ .interview-card-content {
+     padding: 20px;
+     text-align: left;
+     background-color: rgba(0, 0, 0, 0.7);
+ }
+
+ .interview-card h3 {
+     font-family: 'Special Elite', cursive;
+     font-size: 2em;
+     color: #FFC107;
+     margin-bottom: 15px;
+     text-shadow: 2px 2px #000;
+     transition: color 0.3s;
+ }
+
+ .interview-card:hover h3 {
+     color: #E50914;
+ }
+
+ .interview-card p {
+     font-size: 1.1em;
+     line-height: 1.6;
+     color: #EAEAEA;
+     margin-bottom: 25px;
+ }
+
+ .youtube-embed-container {
+     position: relative;
+     padding-bottom: 56.25%;
+     /* 16:9 aspect ratio */
+     height: 0;
+     overflow: hidden;
+     max-width: 100%;
+     background-color: #000;
+     border-top: 4px solid #E50914;
+ }
+
+ .youtube-embed-container iframe {
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     border: none;
+     border-radius: 0 0 12px 12px;
+ }
+
+ .interview-card:hover .youtube-embed-container {
+     border-top-color: #FFC107;
+ }
+
+ /* Interviews Section */
+ #interviews {
+     padding: 80px 20px;
+     background-color: #1E1E1E;
+     background-image: url('path/to/textured-background.png');
+     /* Adds cinematic texture */
+     background-size: cover;
+     color: #EAEAEA;
+ }
+
+ .interviews-header {
+     text-align: center;
+     margin-bottom: 50px;
+     max-width: 800px;
+     margin: 0 auto;
+ }
+
+ .interviews-header h2 {
+     font-family: 'Special Elite', cursive;
+     font-size: 3.5em;
+     color: #E50914;
+     margin: 0;
+     text-shadow: 5px 5px #000;
+     transition: color 0.3s;
+ }
+
+ .interviews-header h2:hover {
+     color: #FFC107;
+ }
+
+ .interviews-header p {
+     font-size: 1.2em;
+     line-height: 1.5;
+     color: #EAEAEA;
+     margin-top: 10px;
+     font-style: italic;
+ }
+
+ .interviews-list {
+     max-width: 1200px;
+     margin: 0 auto;
+     padding: 0 20px;
+ }
+
+ .interview-row {
+     display: flex;
+     align-items: center;
+     background-color: #2B2B2B;
+     border-radius: 12px;
+     margin-bottom: 30px;
+     overflow: hidden;
+     transition: transform 0.3s, box-shadow 0.3s;
+     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+ }
+
+ .interview-row:hover {
+     transform: translateY(-5px);
+     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+ }
+
+ .interview-row-image {
+     flex: 0 0 250px;
+     /* Fixed width for image */
+     height: 150px;
+     overflow: hidden;
+     border-right: 3px solid #E50914;
+ }
+
+ .interview-row-image img {
+     width: 100%;
+     height: 100%;
+     object-fit: cover;
+     transition: transform 0.3s;
+ }
+
+ .interview-row:hover .interview-row-image img {
+     transform: scale(1.1);
+ }
+
+ .interview-row-content {
+     flex: 1;
+     padding: 20px;
+     display: flex;
+     flex-direction: column;
+     justify-content: space-between;
+ }
+
+ .interview-row-content h3 {
+     font-family: 'Special Elite', cursive;
+     font-size: 1.8em;
+     color: #FFC107;
+     margin-bottom: 10px;
+     text-shadow: 2px 2px #000;
+ }
+
+ .interview-row-content p {
+     font-size: 1em;
+     line-height: 1.4;
+     color: #EAEAEA;
+     margin-bottom: 15px;
+ }
+
+ .youtube-embed-container {
+     position: relative;
+     padding-bottom: 56.25%;
+     /* 16:9 aspect ratio */
+     height: 0;
+     overflow: hidden;
+     max-width: 100%;
+     border-radius: 0 0 12px 12px;
+     border-top: 3px solid #E50914;
+     margin-top: 15px;
+ }
+
+ .youtube-embed-container iframe {
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     border: none;
+ }
+
+ /* Media Queries for Responsiveness */
+ @media (max-width: 768px) {
+     .interview-row {
+         flex-direction: column;
+     }
+
+     .interview-row-image {
+         width: 100%;
+         border-right: none;
+         border-bottom: 3px solid #E50914;
+     }
+
+     .interview-row-content {
+         padding: 15px;
+     }
+ }
+
+ .centered-container {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     height: 100vh;
+     background-color: #0d0d0d;
+     padding: 0 20px;
+ }
+
+ .form-section {
+     background-color: #333;
+     padding: 40px;
+     border-radius: 12px;
+     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+     max-width: 400px;
+     width: 100%;
+ }
+
+ h2 {
+     font-size: 2.5em;
+     color: #ffc107;
+     text-align: center;
+     font-family: 'Special Elite', cursive;
+     margin-bottom: 20px;
+ }
+
+ .form-actions {
+     text-align: center;
+ }
+
+ .btn {
+     background-color: #e50914;
+     color: #eaeaea;
+     font-size: 1.2em;
+     padding: 10px 20px;
+     border: none;
+     border-radius: 8px;
+     cursor: pointer;
+     transition: background-color .3s, transform .3s;
+ }
+
+ .btn:hover {
+     background-color: #ffc107;
+ }
+
+ .form-footer {
+     text-align: center;
+     margin-top: 20px;
+ }
+
+ .form-footer a {
+     color: #ffc107;
+     text-decoration: none;
+ }
+
+ .form-footer a:hover {
+     text-decoration: underline;
+ }
+
+ /* General nav styling */
+ nav {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     padding: 10px 20px;
+     background-color: #2B2B2B;
+     color: #EAEAEA;
+ }
+
+ .nav-links {
+     list-style: none;
+     display: flex;
+     gap: 15px;
+     margin: 0;
+     padding: 0;
+ }
+
+ .nav-links li {
+     display: inline;
+ }
+
+ .nav-links a {
+     text-decoration: none;
+     color: #FFC107;
+     /* font-family: 'Montserrat', sans-serif; */
+     font-family: 'Special Elite', cursive;
+     font-weight: 700;
+ }
+
+ /* User actions styling */
+ .user-actions {
+     display: flex;
+     align-items: center;
+     gap: 10px;
+ }
+
+ .user-actions span {
+     font-family: 'Special Elite', cursive;
+     font-size: 16px;
+     color: #EAEAEA;
+ }
+
+ .logout-button,
+ .login-button {
+     text-decoration: none;
+     padding: 5px 10px;
+     background-color: #E50914;
+     color: #EAEAEA;
+     border-radius: 4px;
+     font-family: 'Montserrat', sans-serif;
+     font-weight: 700;
+ }
+
+ .logout-button:hover,
+ .login-button:hover {
+     background-color: #FF5733;
+     color: #FFFFFF;
+     transition: 0.3s;
+ }

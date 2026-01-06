@@ -37,7 +37,7 @@ pub struct ValidationDetails {
 }
 
 #[derive(Serialize, ToSchema)]
-pub struct ErrorResponse {
+pub struct ApiErrorResponse {
     pub message: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub details: Option<ValidationDetails>,
@@ -97,7 +97,7 @@ impl IntoResponse for MoviesApiError {
             }
         };
 
-        let response = ErrorResponse { message, details };
+        let response = ApiErrorResponse { message, details };
 
         (status, Json(response)).into_response()
     }
