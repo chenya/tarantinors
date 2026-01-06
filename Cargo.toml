@@ -25,3 +25,6 @@ utoipa-redoc = { version = "6.0.0", features = ["axum"] }
 utoipa-swagger-ui = { version = "9.0.2", features = ["axum"] }
 uuid = { version = "1.18.1", features = ["v4"] }
 validator = { version = "0.20.0", features = ["derive"] }
+http-body-util = "0.1.3"
+tower = "0.5.2"
+futures = "0.3.31"
