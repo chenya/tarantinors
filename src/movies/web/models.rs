@@ -70,4 +70,6 @@ pub struct ErrorViewModel {
     pub code: u16,
     pub message: String,
     pub details: Option<String>,
+    pub show_suggestions: bool,
+    pub title: String,
 }

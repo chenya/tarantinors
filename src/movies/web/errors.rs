@@ -5,6 +5,7 @@ use axum::{
     response::{Html, IntoResponse, Response},
 };
 use thiserror::Error;
+
 #[derive(Debug, Error)]
 pub enum MoviesWebError {
     #[error("Template rendering failed: {0}")]
@@ -70,6 +71,8 @@ impl IntoResponse for MoviesWebError {
             } else {
                 None
             },
+            show_suggestions: true,
+            title: "Something Went Wrong".to_string(),
         };
 
         match (ErrorTemplate {

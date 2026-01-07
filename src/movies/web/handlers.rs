@@ -30,22 +30,28 @@ pub async fn movie_details(
     let movie = service
         .get_movie(movie_id)
         .await?
-        .ok_or(|e| MoviesWebError::NotFound(movie_id))?;
+        .ok_or_else(|| MoviesWebError::NotFound(movie_id))?;
 
-    let base_template = MovieDetailsTemplate { movie }.render().unwrap();
+    let movie_details_template = MovieDetailsTemplate { movie }
+        .render()
+        .map_err(|e| MoviesWebError::RenderError(e))?;
 
     info!("queried movie {}", movie_id);
-    Ok(Html(base_template))
+    Ok(Html(movie_details_template))
 }
 
 #[instrument]
-pub async fn list_movies(Extension(store): Extension<MoviesStore>) -> Html<String> {
+pub async fn list_movies(
+    Extension(store): Extension<MoviesStore>,
+) -> Result<Html<String>, MoviesWebError> {
     let service = WebService::new(&store.connection);
 
-    let movies = service.get_movies().await.unwrap();
+    let movies = service.get_movies().await?;
 
-    let movies_template = MoviesTemplate { movies }.render().unwrap();
+    let movies_template = MoviesTemplate { movies }
+        .render()
+        .map_err(|e| MoviesWebError::RenderError(e))?;
 
     info!("queried all movies");
-    Html(movies_template)
+    Ok(Html(movies_template))
 }

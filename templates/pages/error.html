@@ -1,36 +1,115 @@
-<!-- templates/error.html -->
-{% extends "base.html" %}
-
-{% block title %}Error {{ error.code }} {% endblock %}
-
-{% block content %}
-<div class="max-w-2xl mx-auto">
-    <div class="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg">
-        <div class="flex items-center mb-4">
-            <svg class="w-8 h-8 text-red-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                    clip-rule="evenodd" />
+{% extends "base.html" %} {% block title %} Error {{ error.code }} - Quentin
+Tarantino Films {% endblock %} {% block main %}
+<section
+    id="error-page"
+    class="py-15 px-5 text-center border-t-[3px] border-b-[3px] border-t-[#FFC107] border-b-[#FFC107] border-solid min-h-screen flex items-center justify-center"
+>
+    <div
+        class="bg-[#333] p-10 border-[3px] border-[#E50914] border-solid rounded-xl shadow-2xl text-center max-w-200 my-0 mx-auto"
+    >
+        <!-- Error Icon/Visual Element -->
+        <div class="mb-8">
+            <svg
+                class="w-32 h-32 mx-auto text-[#E50914]"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                ></path>
             </svg>
-            <h2 class="text-2xl font-bold text-red-800">Error {{ error_code }}</h2>
         </div>
 
-        <p class="text-red-700 text-lg mb-4">{{ error.message }}</p>
+        <!-- Error Code -->
+        <h1
+            class="font-[Special_Elite] text-8xl text-[#E50914] mb-5 text-shadow-[3px_3px_#000]"
+        >
+            {{ error.code }}
+        </h1>
 
-        {% if let Some(details) = error.details %}
-        <details class="mt-4">
-            <summary class="cursor-pointer text-red-600 font-semibold">
-                Technical Details (Debug Mode)
-            </summary>
-            <pre class="mt-2 p-4 bg-red-100 rounded text-sm overflow-x-auto">{{ details }}</pre>
-        </details>
-        {% endif %}
+        <!-- Error Title -->
+        <h2
+            class="font-[Special_Elite] text-4xl text-yellow-400 mb-8 text-shadow-[3px_3px_#000]"
+        >
+            {{ error.title }}
+        </h2>
 
-        <div class="mt-6">
-            <a href="/" class="inline-block bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
-                ← Back to Home
+        <!-- Error Message -->
+        <div class="mb-8">
+            <p class="text-xl leading-normal text-gray-200 mb-5">
+                {{ error.message }}
+            </p>
+
+            <!-- Optional Error Details (for development/debugging) -->
+            {% if let Some(details) = error.details %}
+            <div
+                class="bg-[#1E1E1E] p-5 rounded-lg border-[2px] border-[#444] border-solid mt-5"
+            >
+                <p
+                    class="text-lg text-gray-300 font-mono text-left break-words"
+                >
+                    <strong class="text-yellow-400">Details:</strong><br />
+                    {{ details }}
+                </p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Action Buttons -->
+        <div
+            class="flex flex-col sm:flex-row gap-5 justify-center items-center"
+        >
+            <!-- Go Back Button -->
+            <button
+                onclick="window.history.back()"
+                class="bg-[#E50914] text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-[#B00710] transition-all duration-300 border-[2px] border-yellow-400 hover:border-yellow-500 cursor-pointer text-lg min-w-40"
+            >
+                Go Back
+            </button>
+
+            <!-- Home Button -->
+            <a
+                href="/"
+                class="bg-yellow-400 text-[#0d0d0d] font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-yellow-500 transition-all duration-300 border-[2px] border-[#E50914] hover:border-[#B00710] text-lg min-w-40 inline-block"
+            >
+                Home Page
             </a>
         </div>
+
+        <!-- Optional: Common Error Suggestions -->
+        {% if error.show_suggestions %}
+        <div class="mt-10 pt-8 border-t-[2px] border-[#444] border-solid">
+            <p class="text-lg text-gray-300 mb-4">
+                <strong class="text-yellow-400">Common issues:</strong>
+            </p>
+            <ul class="text-left text-gray-200 space-y-2 max-w-150 mx-auto">
+                <li class="flex items-start">
+                    <span class="text-[#E50914] mr-3 text-xl">•</span>
+                    <span
+                        >The page you're looking for might have been moved or
+                        deleted</span
+                    >
+                </li>
+                <li class="flex items-start">
+                    <span class="text-[#E50914] mr-3 text-xl">•</span>
+                    <span>Check the URL for typos</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-[#E50914] mr-3 text-xl">•</span>
+                    <span>Try refreshing the page</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-[#E50914] mr-3 text-xl">•</span>
+                    <span>If the problem persists, please contact support</span>
+                </li>
+            </ul>
+        </div>
+        {% endif %}
     </div>
-</div>
+</section>
 {% endblock %}
