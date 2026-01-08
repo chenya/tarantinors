@@ -1,9 +1,11 @@
 mod movies;
+mod quotes;
 mod store;
 // mod tests;
 use axum::extract::Path;
 use movies::{api::handlers::MoviesApiDoc, data::store::MoviesStore};
 
+use crate::quotes::data::store::QuoteStore;
 use crate::store::init_dbpool;
 // use movies::data::store::MoviesStore;
 
@@ -87,10 +89,20 @@ async fn main() {
         connection: dbpool.clone(),
     });
 
+    let quotes_api_router = quotes::rest_api_router(QuoteStore {
+        connection: dbpool.clone(),
+    });
+
+    let quotes_web_router = quotes::web_router(QuoteStore {
+        connection: dbpool.clone(),
+    });
+
     let app = Router::new()
         .route("/", get(root))
         .nest("/api/v1", movies_api_router)
         .nest("/movies", movies_web_router)
+        .nest("/api/v1", quotes_api_router)
+        .nest("/quotes", quotes_web_router)
         .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDoc::openapi()))
         .nest_service("/static", ServeDir::new("static"))
         .layer(

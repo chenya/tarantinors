@@ -1,32 +1,37 @@
-{% extends "base.html" %}
-
-{% block title %}
-Home - Quentin Tarantino Films
-{% endblock %}
-
-{% block main %}
-<section id="movies-list"
-    class="py-15 px-5 text-center relative overflow-hidden bg-[#1E1E1E] border-t-[3px] border-b-[3px] border-t-[#FFC107] border-b-[#FFC107] border-b-solid border-t-solid">
-    <h2 class="font-[Special_Elite] text-4xl text-yellow-400 mb-5 text-shadow-[0_3px_3px_rgb(0_0_0)]">Filmography</h2>
+{% extends "base.html" %} {% block title %} Home - Quentin Tarantino Films {%
+endblock %} {% block main %}
+<section
+    id="movies-list"
+    class="py-15 px-5 text-center relative overflow-hidden bg-[#1E1E1E] border-t-[3px] border-b-[3px] border-t-[#FFC107] border-b-[#FFC107] border-b-solid border-t-solid"
+>
+    <h2
+        class="font-[Special_Elite] text-4xl text-yellow-400 mb-5 text-shadow-[0_3px_3px_rgb(0_0_0)]"
+    >
+        Filmography
+    </h2>
     <!-- <div class="film-grid"> -->
     <div
-        class="grid grid-cols-5 gap-5 box-border p-5 max-xl:grid-cols-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1">
+        class="grid grid-cols-5 gap-5 box-border p-5 max-xl:grid-cols-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1"
+    >
         {% for movie in movies %}
 
         <div
-            class="bg-#333 p-5 rounded-xl transition duration-300 ease-in-out
-            duration-300 ease-in-out shadow-[0_10px_30px_rgba(0,0,0,0.7)] relative overflow-hidden
-            border-[3px] border-[#E50914] border-solid text-left flex flex-col items-center
-            max-w-full grow hover:scale-105 hover:shadow-[0_15px_35px_rgba(0,0,0,0.9)] hover:border-[#FFC107] hover:bg-[#444]">
-            <h3 class="font-[Special_Elite] text-[1.8em] text-yellow-400 mt-[15px] mb-[5px] mx-0 
-                text-shadow-[2px_2px_#000] whitespace-nowrap overflow-hidden text-ellipsis tracking-[1px]">
+            class="bg-#333 p-5 rounded-xl transition duration-300 ease-in-out duration-300 ease-in-out shadow-[0_10px_30px_rgba(0,0,0,0.7)] relative overflow-hidden border-[3px] border-[#E50914] border-solid text-left flex flex-col items-center max-w-full grow hover:scale-105 hover:shadow-[0_15px_35px_rgba(0,0,0,0.9)] hover:border-[#FFC107] hover:bg-[#444]"
+        >
+            <h3
+                class="font-[Special_Elite] text-[1.8em] text-yellow-400 mt-[15px] mb-[5px] mx-0 text-shadow-[2px_2px_#000] whitespace-nowrap overflow-hidden text-ellipsis tracking-[1px]"
+            >
                 {{ movie.title }}
             </h3>
-            <a href="/movies/{{ movie.id }}"
-                class="no-underline text-inherit flex flex-col justify-start items-stretch cursor-pointer">
-                <img src="{{ movie.image_url }}" alt="{{ movie.title }}"
-                    class="max-w-full rounded-lg mb-5 shadow-lg transition-transform duration-[0.3s] ease-[ease] hover:grayscale-0 hover:scale-105">
-
+            <a
+                href="/movies/{{ movie.id }}"
+                class="no-underline text-inherit flex flex-col justify-start items-stretch cursor-pointer"
+            >
+                <img
+                    src="{{ movie.image_url }}"
+                    alt="{{ movie.title }}"
+                    class="max-w-full rounded-lg mb-5 shadow-lg transition-transform duration-[0.3s] ease-[ease] hover:grayscale-0 hover:scale-105"
+                />
             </a>
         </div>
 
