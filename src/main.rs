@@ -1,9 +1,10 @@
+mod docs;
 mod movies;
 mod quotes;
 mod store;
 // mod tests;
 use axum::extract::Path;
-use movies::{api::handlers::MoviesApiDoc, data::store::MoviesStore};
+use movies::data::store::MoviesStore;
 
 use crate::quotes::data::store::QuoteStore;
 use crate::store::init_dbpool;
@@ -51,29 +52,34 @@ fn init_tracing() {
         .init();
 }
 
-#[derive(OpenApi)]
-#[openapi(
-    info(
-        title = "Movies  API",
-        description = "A comprehensive Movies API with validation",
-        version = "1.0.0",
-        contact(
-            name = "API Support",
-            email = "support@example.com"
-        ),
-        license(
-            name = "MIT",
-            url = "https://opensource.org/licenses/MIT"
-        )
-    ),
-    servers(
-        (url = "http://localhost:3000", description = "Development server"),
-    ),
-    nest(
-        (path = "/api/v1", api = MoviesApiDoc)
-    ),
-)]
-pub struct ApiDoc;
+// #[derive(OpenApi)]
+// #[openapi(
+//     info(
+//         title = "Quentin Tarantino API",
+//         description = "A comprehensive API for exploring Quentin Tarantino works",
+//         version = "1.0.0",
+//         contact(
+//             name = "API Support",
+//             email = "support@example.com"
+//         ),
+//         license(
+//             name = "MIT",
+//             url = "https://opensource.org/licenses/MIT"
+//         )
+//     ),
+//     servers(
+//         (url = "http://localhost:3000", description = "Development server"),
+//     ),
+//     tags(
+//             (name = "movies", description = "Movies  endpoints"),
+//             (name = "quotes", description = "Quotes endpoints"),
+//             (name = "health", description = "Health check endpoints")
+//     ),
+//     nest(
+//         (path = "/api/v1", api = MoviesApiDoc)
+//     ),
+// )]
+// pub struct ApiDoc;
 
 #[tokio::main]
 async fn main() {
@@ -103,7 +109,7 @@ async fn main() {
         .nest("/movies", movies_web_router)
         .nest("/api/v1", quotes_api_router)
         .nest("/quotes", quotes_web_router)
-        .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDoc::openapi()))
+        .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", docs::ApiDoc::openapi()))
         .nest_service("/static", ServeDir::new("static"))
         .layer(
             TraceLayer::new_for_http().make_span_with(|request: &Request<Body>| {

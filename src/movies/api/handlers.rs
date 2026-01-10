@@ -42,7 +42,7 @@ pub async fn add_movie(
     Ok((StatusCode::CREATED, Json(MoviesMessage { message })))
 }
 
-// Get movie by ID
+/// Get movie by ID
 #[utoipa::path(
     get,
     path = "/movies/{movie_id}",
@@ -302,28 +302,23 @@ pub async fn fallback_handler(uri: axum::http::Uri) -> impl IntoResponse {
         add_movie,
         remove_movie
     ),
-    components(
-        schemas(
-            CreateMovieRequest,
-            CreateMovieAwardRequest,
-            CreateMovieAwardNominationRequest,
-            MovieAwardResponse,
-            MovieAwardNominationResponse,
-            CreateMovieRequest,
-            MovieResponse,
-            Actors,
-            Directors,
-            Producers,
-            Writers,
-            MovieAwardsResponse,
-            MovieNominationsResponse,
-            MoviesMessage,
-            Movies,
-        )
-    ),
-    modifiers(),
-    tags(
-        (name = "Movies", description = "Movies endpoints")
-    )
+    components(schemas(
+        CreateMovieRequest,
+        CreateMovieAwardRequest,
+        CreateMovieAwardNominationRequest,
+        MovieAwardResponse,
+        MovieAwardNominationResponse,
+        CreateMovieRequest,
+        MovieResponse,
+        Actors,
+        Directors,
+        Producers,
+        Writers,
+        MovieAwardsResponse,
+        MovieNominationsResponse,
+        MoviesMessage,
+        Movies,
+    )),
+    modifiers()
 )]
 pub struct MoviesApiDoc;

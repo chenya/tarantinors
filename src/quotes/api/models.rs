@@ -8,8 +8,9 @@ pub struct QuoteResponse {
     pub text: String,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, ToSchema)]
+#[derive(Debug, Serialize, Deserialize, Clone, Validate, ToSchema)]
 pub struct CreateQuoteRequest {
+    #[validate(length(min = 1, message = "Text cannot be empty"))]
     pub text: String,
 }
 
