@@ -1,18 +1,15 @@
-{% extends "base.html" %} {% block title %} Quentin Tarantino Quotes {% endblock
-%} {% block main %}
-<section
-    id="quotes"
-    class="px-5 py-15 text-center bg-[#1E1E1E] border-y-[3px] border-y-[#FFC107] border-solid"
->
-    <h2
-        class="font-[Special_Elite] text-5xl text-[#E50914] mb-10 text-shadow-[0_3px_3px_rgb(0_0_0)]"
-    >
+{% extends "base.html" %}
+
+{% block title %} Quentin Tarantino Quotes {% endblock%}
+
+{% block main %}
+<section id="quotes" class="px-5 py-15 text-center bg-[#1E1E1E] border-y-[3px] border-y-[#FFC107] border-solid">
+    <h2 class="font-[Special_Elite] text-5xl text-[#E50914] mb-10 text-shadow-[0_3px_3px_rgb(0_0_0)]">
         Quotes
     </h2>
     {% for quote in quotes %}
     <div
-        class="bg-#333 p-5 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.7)] border-[3px] border-solid border-[#E50914] mx-auto my-5 max-w-200 text-center"
-    >
+        class="bg-#333 p-5 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.7)] border-[3px] border-solid border-[#E50914] mx-auto my-5 max-w-200 text-center">
         <p class="text-2xl leading-normal text-[#EAEAEA] mb-[15px]">
             "{{ quote.text }}"
         </p>

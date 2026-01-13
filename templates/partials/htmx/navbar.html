@@ -1,25 +1,22 @@
 <nav
-    class="flex flex-col md:flex-row items-start md:items-center justify-between py-[10px] px-[20px] bg-[#2B2B2B] text-[#EAEAEA] ">
-    <button hx-get="/home" hx-target="main"
+    class="flex flex-col md:flex-row items-start md:items-center justify-between py-[10px] px-[20px] bg-[#2B2B2B] text-[#EAEAEA]">
+    <button hx-get="/htmx/home" hx-target="main"
         class="font-[Special_Elite] text-[56px] m-0 text-yellow-400 [text-shadow:4px_4px_#000] font-bold transition-all duration-300 hover:text-[#E50914] hover:scale-102 cursor-pointer">
         Quentin Tarantino HTMX
-
     </button>
     <div class="list-none flex flex-col md:flex-row justify-center gap-[25px] m-0 p-0">
-        <button hx-get="/htmx_movies" hx-target="main"
-            class="no-underline text-yellow-400 font-[Special_Elite] font-bold text-xl tracking-wide  transition-all duration-300 hover:text-[#E50914] hover:scale-110 cursor-pointer">
+        <button hx-get="/htmx/movies" hx-target="main"
+            class="no-underline text-yellow-400 font-[Special_Elite] font-bold text-xl tracking-wide transition-all duration-300 hover:text-[#E50914] hover:scale-110 cursor-pointer">
             Movies
         </button>
 
-
-        <button hx-get="/htmx_interviews" hx-target="main"
-            class="no-underline text-yellow-400 font-[Special_Elite] font-bold text-xl tracking-wide  transition-all duration-300 hover:text-[#E50914] hover:scale-110 cursor-pointer">
+        <button hx-get="/htmx/interviews" hx-target="main"
+            class="no-underline text-yellow-400 font-[Special_Elite] font-bold text-xl tracking-wide transition-all duration-300 hover:text-[#E50914] hover:scale-110 cursor-pointer">
             Interviews
         </button>
 
-
-        <button hx-get="/htmx_quotes" hx-target="main"
-            class="no-underline text-yellow-400 font-[Special_Elite] font-bold text-xl tracking-wide  transition-all duration-300 hover:text-[#E50914] hover:scale-110 cursor-pointer">
+        <button hx-get="/htmx/quotes" hx-target="main"
+            class="no-underline text-yellow-400 font-[Special_Elite] font-bold text-xl tracking-wide transition-all duration-300 hover:text-[#E50914] hover:scale-110 cursor-pointer">
             Quotes
         </button>
     </div>

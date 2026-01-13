@@ -1,22 +1,51 @@
-<section id="interviews">
-    <div class="interviews-header">
-        <h2>Interviews</h2>
-        <p>Explore insightful conversations and interviews with Quentin Tarantino</p>
-    </div>
-    <div class="interviews-list">
-        {% for interview in interviews %}
-        <div class="interview-row">
-            <div class="interview-row-content">
-                <h3>{{ interview.title }}</h3>
-                <p>{{ interview.description }}</p>
-                <div class="youtube-embed-container">
-                    <iframe src="https://www.youtube.com/embed/{{ interview.youtube_id }}" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
-                    </iframe>
+<section id="interviews"
+    class="py-15 px-5 bg-neutral-800 border-t-[3px] border-t-[#FFC107] border-t-solid border-b-[3px] border-b-[#FFC107] border-b-solid">
+    <div class="max-w-[1200px] mx-auto my-0">
+        <!-- Header Section -->
+        <div class="text-center mb-[70px]">
+            <h2
+                class="font-[Special_Elite] text-5xl text-[#E50914] mb-2.5 text-shadow-[5px_5px_#000] transition-colors duration-300 hover:text-[#FFC107]">
+                Interviews
+            </h2>
+            <p class="text-xl leading-normal text-[#EAEAEA] mt-2.5 italic">
+                Explore insightful conversations and interviews with Quentin
+                Tarantino
+            </p>
+        </div>
+
+        <!-- Interviews List -->
+        <div class="flex flex-col gap-[30px]">
+            {% if !interviews.is_empty() %} {% for interview in interviews %}
+            <div
+                class="flex items-center bg-[#2B2B2B] rounded-xl overflow-hidden transition-all duration-300 shadow-[0_8px_20px_rgba(0,0,0,0.5)] hover:translate-y-[-5px] hover:shadow-[0_16px_40px_rgba(0,0,0,0.7)] max-md:flex-col">
+                <!-- Interview Content -->
+                <div class="flex-1 p-5 flex flex-col justify-between">
+                    <h3 class="font-[Special_Elite] text-3xl text-[#FFC107] mb-2.5 text-shadow-[2px_2px_#000]">
+                        {{ interview.title }}
+                    </h3>
+                    <p class="text-lg leading-relaxed text-[#EAEAEA] mb-[15px]">
+                        {{ interview.description }}
+                    </p>
+
+                    <!-- YouTube Embed Container -->
+                    <div
+                        class="relative pb-[56.25%] h-0 overflow-hidden max-w-full rounded-b-xl border-t-[3px] border-t-[#E50914] border-t-solid mt-[15px] transition-all duration-300 hover:border-t-[#FFC107]">
+                        <iframe class="absolute top-0 left-0 w-full h-full border-none"
+                            src="https://www.youtube.com/embed/{{ interview.youtube_id }}" title="{{ interview.title }}"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
                 </div>
             </div>
+            {% endfor %} {% else %}
+            <div class="bg-[#333] p-10 rounded-xl text-center border-[3px] border-[#E50914] border-solid">
+                <p class="text-2xl text-[#FFC107] font-[Special_Elite]">
+                    No interviews available at the moment.
+                </p>
+            </div>
+            {% endif %}
         </div>
-        {% endfor %}
     </div>
 </section>

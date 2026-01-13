@@ -1,4 +1,5 @@
 mod docs;
+mod interviews;
 mod movies;
 mod quotes;
 mod store;
@@ -6,6 +7,7 @@ mod store;
 use axum::extract::Path;
 use movies::data::store::MoviesStore;
 
+use crate::interviews::data::store::InterviewStore;
 use crate::quotes::data::store::QuoteStore;
 use crate::store::init_dbpool;
 // use movies::data::store::MoviesStore;
@@ -24,12 +26,6 @@ use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
 
 use askama::Template;
-
-#[derive(Template)]
-#[template(path = "hello_name.html")]
-pub struct HelloName {
-    pub name: String,
-}
 
 fn init_tracing() {
     let rust_log = std::env::var(EnvFilter::DEFAULT_ENV)
@@ -95,6 +91,10 @@ async fn main() {
         connection: dbpool.clone(),
     });
 
+    let movies_htmx_web_router = movies::htmx_web_router(MoviesStore {
+        connection: dbpool.clone(),
+    });
+
     let quotes_api_router = quotes::rest_api_router(QuoteStore {
         connection: dbpool.clone(),
     });
@@ -103,12 +103,34 @@ async fn main() {
         connection: dbpool.clone(),
     });
 
+    let quotes_htmx_web_router = quotes::htmx_web_router(QuoteStore {
+        connection: dbpool.clone(),
+    });
+
+    let interviews_api_router = interviews::rest_api_router(InterviewStore {
+        connection: dbpool.clone(),
+    });
+
+    let interviews_web_router = interviews::web_router(InterviewStore {
+        connection: dbpool.clone(),
+    });
+
+    let interviews_htmx_web_router = interviews::htmx_web_router(InterviewStore {
+        connection: dbpool.clone(),
+    });
+
     let app = Router::new()
-        .route("/", get(root))
+        .route("/", get(home))
+        .route("/htmx", get(htmx_home))
         .nest("/api/v1", movies_api_router)
         .nest("/movies", movies_web_router)
+        .nest("/htmx/movies", movies_htmx_web_router)
         .nest("/api/v1", quotes_api_router)
         .nest("/quotes", quotes_web_router)
+        .nest("/htmx/quotes", quotes_htmx_web_router)
+        .nest("/api/v1", interviews_api_router)
+        .nest("/interviews", interviews_web_router)
+        .nest("/htmx/interviews", interviews_htmx_web_router)
         .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", docs::ApiDoc::openapi()))
         .nest_service("/static", ServeDir::new("static"))
         .layer(
@@ -148,17 +170,26 @@ struct Msg {
     message: String,
 }
 
-#[instrument]
-async fn root() -> Html<&'static str> {
-    info!("Sending hello world response");
-    Html("<h1>Hello, World!</h1>")
-}
+#[derive(Template)]
+#[template(path = "pages/home.html")]
+pub struct HomeTemplate;
 
 #[instrument]
-async fn hello_name(Path(name): Path<String>) -> Html<String> {
-    info!("Sending hello world response to {}", name);
-    let template = HelloName { name: name };
-    Html(template.render().unwrap())
+async fn home() -> Html<String> {
+    let home_template = HomeTemplate {}.render().unwrap();
+    info!("Welcome to Quentin Tarantino home page");
+    Html(home_template)
+}
+
+#[derive(Template)]
+#[template(path = "pages/htmx/home.html")]
+pub struct HtmxHomeTemplate;
+
+#[instrument]
+async fn htmx_home() -> Html<String> {
+    let htmx_home_template = HtmxHomeTemplate {}.render().unwrap();
+    info!("Welcome to Quentin Tarantino htmx home page");
+    Html(htmx_home_template)
 }
 
 #[instrument]

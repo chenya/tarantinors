@@ -6,3 +6,9 @@ use askama::Template;
 pub struct QuotesTemplate {
     pub quotes: Vec<QuoteViewModel>,
 }
+
+#[derive(Template)]
+#[template(path = "pages/htmx/quotes.html")]
+pub struct HtmxQuotesTemplate {
+    pub quotes: Vec<QuoteViewModel>,
+}

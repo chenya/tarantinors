@@ -20,12 +20,7 @@ impl WebService {
     }
     pub async fn get_movie(&self, movie_id: i32) -> Result<Option<MovieViewModel>, MoviesWebError> {
         // 1. Movie
-        let movie = match self
-            .repo
-            .get_movie_by_id(movie_id)
-            .await
-            .map_err(|e| MoviesWebError::DatabaseError(e))?
-        {
+        let movie = match self.repo.get_movie_by_id(movie_id).await? {
             None => return Ok(None),
             Some(m) => m,
         };
@@ -47,11 +42,7 @@ impl WebService {
         let nominations = self.get_movie_nominations(movie_id).await?;
 
         // 6. Genre
-        let movie_genre = self
-            .repo
-            .get_movie_genre(movie_id)
-            .await
-            .map_err(|e| MoviesWebError::DatabaseError(e))?;
+        let movie_genre = self.repo.get_movie_genre(movie_id).await?;
 
         let movie_view_model = MovieViewModel {
             id: movie_id,
@@ -93,31 +84,27 @@ impl WebService {
     }
 
     pub async fn get_movie_actors(&self, movie_id: i32) -> Result<Vec<String>, MoviesWebError> {
-        self.repo
-            .get_movie_actors_names(movie_id)
-            .await
-            .map_err(|e| MoviesWebError::DatabaseError(e))
+        let actors = self.repo.get_movie_actors_names(movie_id).await?;
+
+        Ok(actors)
     }
 
     pub async fn get_movie_directors(&self, movie_id: i32) -> Result<Vec<String>, MoviesWebError> {
-        self.repo
-            .get_movie_directors_names(movie_id)
-            .await
-            .map_err(|e| MoviesWebError::DatabaseError(e))
+        let directors = self.repo.get_movie_directors_names(movie_id).await?;
+
+        Ok(directors)
     }
 
     pub async fn get_movie_writers(&self, movie_id: i32) -> Result<Vec<String>, MoviesWebError> {
-        self.repo
-            .get_movie_writers_names(movie_id)
-            .await
-            .map_err(|e| MoviesWebError::DatabaseError(e))
+        let writers = self.repo.get_movie_writers_names(movie_id).await?;
+
+        Ok(writers)
     }
 
     pub async fn get_movie_producers(&self, movie_id: i32) -> Result<Vec<String>, MoviesWebError> {
-        self.repo
-            .get_movie_producers_names(movie_id)
-            .await
-            .map_err(|e| MoviesWebError::DatabaseError(e))
+        let producers = self.repo.get_movie_producers_names(movie_id).await?;
+
+        Ok(producers)
     }
 
     pub async fn get_movie_awards(
@@ -127,14 +114,13 @@ impl WebService {
         let awards = self
             .repo
             .get_movie_awards_won(movie_id)
-            .await
-            .map_err(|e| MoviesWebError::DatabaseError(e))?
-            .iter()
+            .await?
+            .into_iter()
             .map(|a| MovieAwardViewModel {
-                name: a.name.clone(),
-                category: a.category.clone(),
+                name: a.name,
+                category: a.category,
                 year: a.year,
-                recipient: a.recipient.clone(),
+                recipient: a.recipient,
             })
             .collect();
 
@@ -148,14 +134,13 @@ impl WebService {
         let nominations = self
             .repo
             .get_movie_awards_nominations(movie_id)
-            .await
-            .map_err(|e| MoviesWebError::DatabaseError(e))?
-            .iter()
+            .await?
+            .into_iter()
             .map(|a| MovieAwardNominationViewModel {
-                name: a.name.clone(),
-                category: a.category.clone(),
+                name: a.name,
+                category: a.category,
                 year: a.year,
-                nominee: a.nominee.clone(),
+                nominee: a.nominee,
             })
             .collect();
 

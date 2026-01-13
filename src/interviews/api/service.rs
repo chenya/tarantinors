@@ -22,7 +22,6 @@ impl ApiService {
         new_interview: CreateInterviewRequest,
     ) -> Result<(), InterviewsApiError> {
         let mut tx = self.repo.pool.begin().await?;
-        // .map_err(|e| InterviewsApiError::DatabaseError(e))?;
 
         let _ = self
             .repo
@@ -33,10 +32,8 @@ impl ApiService {
                 new_interview.youtube_id,
             )
             .await?;
-        // .map_err(|e| InterviewsApiError::DatabaseError(e))?;
 
         tx.commit().await?;
-        // .map_err(|e| InterviewsApiError::DatabaseError(e))?;
 
         Ok(())
     }
@@ -46,7 +43,6 @@ impl ApiService {
         interview_id: i32,
     ) -> Result<Option<InterviewResponse>, InterviewsApiError> {
         let quote = self.repo.get_interview(interview_id).await?;
-        // .map_err(|e| InterviewsApiError::DatabaseError(e))?;
 
         match quote {
             None => Ok(None),
@@ -63,7 +59,6 @@ impl ApiService {
             .repo
             .get_interviews()
             .await?
-            // .map_err(|e| InterviewsApiError::DatabaseError(e))?
             .into_iter()
             .map(|i| InterviewResponse {
                 title: i.title,
@@ -82,13 +77,10 @@ impl ApiService {
             .ok_or(InterviewsApiError::NotFound(interview_id))?;
 
         let mut tx = self.repo.pool.begin().await?;
-        // .map_err(|e| InterviewsApiError::DatabaseError(e))?;
 
         self.repo.delete_interview(&mut tx, interview_id).await?;
-        // .map_err(|e| InterviewsApiError::DatabaseError(e))?;
 
         tx.commit().await?;
-        // .map_err(|e| InterviewsApiError::DatabaseError(e))?;
 
         Ok(())
     }

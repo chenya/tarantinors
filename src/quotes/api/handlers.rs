@@ -21,7 +21,7 @@ use utoipa::OpenApi;
     path = "/quotes",
     request_body = CreateQuoteRequest,
     responses(
-        (status = 201, description = "Movie Created", body = CreateQuoteRequest),
+        (status = 201, description = "Quote Created", body = CreateQuoteRequest),
         (status = 400, description = "Request Validation Error", body = QuoteApiErrorResponse),
         (status = 500, description = "Internal server error", body = QuoteApiErrorResponse)
     ),

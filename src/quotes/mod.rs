@@ -28,3 +28,11 @@ pub fn web_router(quote_store: QuoteStore) -> Router {
 
     router
 }
+
+pub fn htmx_web_router(quote_store: QuoteStore) -> Router {
+    let router = Router::new()
+        .route("/", get(web::handlers::htmx_list_quotes))
+        .layer(Extension(quote_store));
+
+    router
+}

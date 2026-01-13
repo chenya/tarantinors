@@ -21,6 +21,18 @@ pub struct MoviesTemplate {
 }
 
 #[derive(Template)]
+#[template(path = "pages/htmx/movie_detail.html")]
+pub struct HtmxMovieDetailsTemplate {
+    pub movie: MovieViewModel,
+}
+
+#[derive(Template)]
+#[template(path = "pages/htmx/movies.html")]
+pub struct HtmxMoviesTemplate {
+    pub movies: Vec<MovieViewModel>,
+}
+
+#[derive(Template)]
 #[template(path = "pages/error.html")]
 pub struct ErrorTemplate {
     pub error: ErrorViewModel,
