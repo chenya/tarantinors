@@ -172,6 +172,8 @@ impl ApiService {
     }
 
     pub async fn delete_movie(&self, movie_id: i32) -> Result<(), MoviesApiError> {
+        let _ = self.movie_exists_guard(movie_id).await?;
+
         let mut tx = self
             .repo
             .pool
@@ -265,7 +267,17 @@ impl ApiService {
         Ok(movies)
     }
 
+    async fn movie_exists_guard(&self, movie_id: i32) -> Result<(), MoviesApiError> {
+        self.repo
+            .get_movie_by_id(movie_id)
+            .await?
+            .ok_or_else(|| MoviesApiError::MovieNotFound(movie_id))?;
+        Ok(())
+    }
+
     pub async fn get_movie_actors(&self, movie_id: i32) -> Result<Vec<String>, MoviesApiError> {
+        let _ = self.movie_exists_guard(movie_id).await?;
+
         self.repo
             .get_movie_actors_names(movie_id)
             .await
@@ -273,6 +285,8 @@ impl ApiService {
     }
 
     pub async fn get_movie_directors(&self, movie_id: i32) -> Result<Vec<String>, MoviesApiError> {
+        let _ = self.movie_exists_guard(movie_id).await?;
+
         self.repo
             .get_movie_directors_names(movie_id)
             .await
@@ -280,6 +294,8 @@ impl ApiService {
     }
 
     pub async fn get_movie_writers(&self, movie_id: i32) -> Result<Vec<String>, MoviesApiError> {
+        let _ = self.movie_exists_guard(movie_id).await?;
+
         self.repo
             .get_movie_writers_names(movie_id)
             .await
@@ -287,6 +303,8 @@ impl ApiService {
     }
 
     pub async fn get_movie_producers(&self, movie_id: i32) -> Result<Vec<String>, MoviesApiError> {
+        let _ = self.movie_exists_guard(movie_id).await?;
+
         self.repo
             .get_movie_producers_names(movie_id)
             .await
@@ -297,6 +315,8 @@ impl ApiService {
         &self,
         movie_id: i32,
     ) -> Result<Vec<MovieAwardResponse>, MoviesApiError> {
+        let _ = self.movie_exists_guard(movie_id).await?;
+
         let awards = self
             .repo
             .get_movie_awards_won(movie_id)
@@ -318,6 +338,8 @@ impl ApiService {
         &self,
         movie_id: i32,
     ) -> Result<Vec<MovieAwardNominationResponse>, MoviesApiError> {
+        let _ = self.movie_exists_guard(movie_id).await?;
+
         let nominations = self
             .repo
             .get_movie_awards_nominations(movie_id)
