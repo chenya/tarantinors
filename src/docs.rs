@@ -1,3 +1,4 @@
+use crate::interviews::api::handlers::InterviewsApiDoc;
 use crate::movies::api::handlers::MoviesApiDoc;
 use crate::quotes::api::handlers::QuotesApiDoc;
 use utoipa::OpenApi;
@@ -24,6 +25,7 @@ use utoipa::OpenApi;
     nest(
         (path = "/api/v1", api = MoviesApiDoc),
         (path = "/api/v1", api = QuotesApiDoc),
+        (path = "/api/v1", api = InterviewsApiDoc),
     ),
 )]
 pub struct ApiDoc;
