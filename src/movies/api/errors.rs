@@ -43,120 +43,79 @@ pub struct ApiErrorResponse {
     pub details: Option<ValidationDetails>,
 }
 
+impl MoviesApiError {
+    pub fn status_code(&self) -> StatusCode {
+        match self {
+            Self::MovieNotFound(_) => StatusCode::NOT_FOUND,
+            Self::NoPersonsFoundForRole(_, _) => StatusCode::NOT_FOUND,
+            Self::Validation(_) => StatusCode::BAD_REQUEST,
+            Self::DatabaseError(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            Self::InternalError(_) => StatusCode::INTERNAL_SERVER_ERROR,
+        }
+    }
+
+    pub fn message(&self) -> String {
+        match self {
+            Self::MovieNotFound(id) => format!("Movie with ID {} not found", id),
+            Self::Validation(_) => "Request validation failed".to_string(),
+            Self::NoPersonsFoundForRole(role, movie_id) => format!(
+                "Requested persons of role '{}' for movie id({}) not found",
+                role, movie_id
+            ),
+            Self::DatabaseError(e) => format!("Database error: {}", e),
+            Self::InternalError(e) => format!("Internal error: {}", e),
+        }
+    }
+
+    pub fn details(&self) -> Option<ValidationDetails> {
+        match self {
+            Self::MovieNotFound(_) => None,
+            Self::Validation(errors) => {
+                let field_errors = self.extract_field_errors(&errors);
+                let error_count = field_errors.values().map(|v| v.len()).sum();
+
+                Some(ValidationDetails {
+                    field_errors,
+                    error_count,
+                })
+            }
+            Self::NoPersonsFoundForRole(_, _) => None,
+            Self::DatabaseError(_) => None,
+            Self::InternalError(_) => None,
+        }
+    }
+
+    fn extract_field_errors(&self, errors: &ValidationErrors) -> HashMap<String, Vec<String>> {
+        errors
+            .field_errors()
+            .iter()
+            .map(|(field, field_errors)| {
+                let messages = field_errors
+                    .iter()
+                    .map(|error| {
+                        error
+                            .message
+                            .as_ref()
+                            .map(|cow| cow.to_string())
+                            .unwrap_or_else(|| "Invalid value".to_string())
+                    })
+                    .collect();
+                (field.to_string(), messages)
+            })
+            .collect()
+    }
+}
+
 impl IntoResponse for MoviesApiError {
     fn into_response(self) -> Response {
-        let (status, message, details) = match self {
-            MoviesApiError::MovieNotFound(movie_id) => {
-                error!("Requested movie id({}) not found", movie_id);
-                (
-                    StatusCode::NOT_FOUND,
-                    format!("Requested movie id({}) not found", movie_id),
-                    None,
-                )
-            }
-            MoviesApiError::NoPersonsFoundForRole(role, movie_id) => {
-                error!(
-                    "Requested persons of role '{}' for movie id({}) not found",
-                    role, movie_id
-                );
-                (
-                    StatusCode::NOT_FOUND,
-                    format!(
-                        "Requested persons of role '{}' for movie id({}) not found",
-                        role, movie_id
-                    ),
-                    None,
-                )
-            }
-            MoviesApiError::Validation(errors) => {
-                let field_errors = extract_field_errors(&errors);
-                let error_count = field_errors.values().map(|v| v.len()).sum();
-                error!("Request validation errors: {:?}", field_errors);
-                (
-                    StatusCode::BAD_REQUEST,
-                    "Request validation failed".to_string(),
-                    Some(ValidationDetails {
-                        field_errors,
-                        error_count,
-                    }),
-                )
-            }
+        let status = self.status_code();
+        let message = self.message();
+        let details = self.details();
 
-            MoviesApiError::DatabaseError(e) => {
-                error!("Database error: {:?}", e);
-                (StatusCode::INTERNAL_SERVER_ERROR, e.to_string(), None)
-            }
-
-            MoviesApiError::InternalError(e) => {
-                error!("Internal error: {e}");
-                (
-                    StatusCode::INTERNAL_SERVER_ERROR,
-                    format!("Internal error: {e}"),
-                    None,
-                )
-            }
-        };
-
+        error!(message);
         let response = ApiErrorResponse { message, details };
 
         (status, Json(response)).into_response()
     }
 }
 
-fn extract_field_errors(errors: &ValidationErrors) -> HashMap<String, Vec<String>> {
-    errors
-        .field_errors()
-        .iter()
-        .map(|(field, field_errors)| {
-            let messages = field_errors
-                .iter()
-                .map(|error| {
-                    error
-                        .message
-                        .as_ref()
-                        .map(|cow| cow.to_string())
-                        .unwrap_or_else(|| "Invalid value".to_string())
-                })
-                .collect();
-            (field.to_string(), messages)
-        })
-        .collect()
-}
-
-#[derive(Debug, Error)]
-pub enum MoviesError {
-    #[error("movie not found")]
-    NotFound,
-
-    #[error("Failed database query: {0}")]
-    DbQuery(#[from] sqlx::Error),
-
-    #[error("Internal error: {0}")]
-    Internal(#[from] anyhow::Error),
-}
-
-impl IntoResponse for MoviesError {
-    fn into_response(self) -> Response {
-        let (status_code, message) = match &self {
-            MoviesError::NotFound => (StatusCode::NOT_FOUND, self.to_string()),
-
-            MoviesError::DbQuery(e) => {
-                error!("database error: {:?}", self);
-                (
-                    StatusCode::INTERNAL_SERVER_ERROR,
-                    format!("database query error: {}", e),
-                )
-            }
-            MoviesError::Internal(e) => {
-                error!("internal error: {:?}", self);
-                (
-                    StatusCode::INTERNAL_SERVER_ERROR,
-                    format!("internal error {}", e),
-                )
-            }
-        };
-
-        let body = Json(MoviesMessage { message });
-        (status_code, body).into_response()
-    }
-}
