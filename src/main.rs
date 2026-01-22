@@ -3,29 +3,25 @@ mod interviews;
 mod movies;
 mod quotes;
 mod store;
+
 // mod tests;
 use axum::extract::Path;
-use movies::data::store::MoviesStore;
-
-use crate::interviews::data::store::InterviewStore;
-use crate::quotes::data::store::QuoteStore;
-use crate::store::init_dbpool;
-// use movies::data::store::MoviesStore;
 
 use axum::body::Body;
 use axum::http::Request;
-use axum::{Json, Router, response::Html, routing::get};
+use axum::{response::Html, routing::get, Json, Router};
 
 use serde::{Deserialize, Serialize};
 
 use tower_http::{services::ServeDir, trace::TraceLayer};
 use tracing::{info, instrument};
 use tracing_subscriber::fmt::format::FmtSpan;
-use tracing_subscriber::{EnvFilter, filter::LevelFilter, fmt, prelude::*};
+use tracing_subscriber::{filter::LevelFilter, fmt, prelude::*, EnvFilter};
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
 
 use askama::Template;
+use store::Store;
 
 fn init_tracing() {
     let rust_log = std::env::var(EnvFilter::DEFAULT_ENV)
@@ -48,89 +44,29 @@ fn init_tracing() {
         .init();
 }
 
-// #[derive(OpenApi)]
-// #[openapi(
-//     info(
-//         title = "Quentin Tarantino API",
-//         description = "A comprehensive API for exploring Quentin Tarantino works",
-//         version = "1.0.0",
-//         contact(
-//             name = "API Support",
-//             email = "support@example.com"
-//         ),
-//         license(
-//             name = "MIT",
-//             url = "https://opensource.org/licenses/MIT"
-//         )
-//     ),
-//     servers(
-//         (url = "http://localhost:3000", description = "Development server"),
-//     ),
-//     tags(
-//             (name = "movies", description = "Movies  endpoints"),
-//             (name = "quotes", description = "Quotes endpoints"),
-//             (name = "health", description = "Health check endpoints")
-//     ),
-//     nest(
-//         (path = "/api/v1", api = MoviesApiDoc)
-//     ),
-// )]
-// pub struct ApiDoc;
+fn make_app_router(db_store: &Store) -> Router {
+    let movies_api_router = movies::rest_api_router(db_store);
+    let movies_web_router = movies::web_router(db_store);
+    let movies_htmx_web_router = movies::htmx_web_router(db_store);
+    let quotes_api_router = quotes::rest_api_router(db_store);
+    let quotes_web_router = quotes::web_router(db_store);
+    let quotes_htmx_web_router = quotes::htmx_web_router(db_store);
+    let interviews_api_router = interviews::rest_api_router(db_store);
+    let interviews_web_router = interviews::web_router(db_store);
+    let interviews_htmx_web_router = interviews::htmx_web_router(db_store);
 
-#[tokio::main]
-async fn main() {
-    let _ = dotenvy::dotenv();
-
-    init_tracing();
-    let dbpool = init_dbpool().await.unwrap();
-
-    let movies_api_router = movies::rest_api_router(MoviesStore {
-        connection: dbpool.clone(),
-    });
-    let movies_web_router = movies::web_router(MoviesStore {
-        connection: dbpool.clone(),
-    });
-
-    let movies_htmx_web_router = movies::htmx_web_router(MoviesStore {
-        connection: dbpool.clone(),
-    });
-
-    let quotes_api_router = quotes::rest_api_router(QuoteStore {
-        connection: dbpool.clone(),
-    });
-
-    let quotes_web_router = quotes::web_router(QuoteStore {
-        connection: dbpool.clone(),
-    });
-
-    let quotes_htmx_web_router = quotes::htmx_web_router(QuoteStore {
-        connection: dbpool.clone(),
-    });
-
-    let interviews_api_router = interviews::rest_api_router(InterviewStore {
-        connection: dbpool.clone(),
-    });
-
-    let interviews_web_router = interviews::web_router(InterviewStore {
-        connection: dbpool.clone(),
-    });
-
-    let interviews_htmx_web_router = interviews::htmx_web_router(InterviewStore {
-        connection: dbpool.clone(),
-    });
-
-    let app = Router::new()
+    let app_router = Router::new()
         .route("/", get(home))
-        .route("/htmx", get(htmx_home))
-        .nest("/api/v1", movies_api_router)
         .nest("/movies", movies_web_router)
-        .nest("/htmx/movies", movies_htmx_web_router)
-        .nest("/api/v1", quotes_api_router)
         .nest("/quotes", quotes_web_router)
-        .nest("/htmx/quotes", quotes_htmx_web_router)
-        .nest("/api/v1", interviews_api_router)
         .nest("/interviews", interviews_web_router)
+        .route("/htmx", get(htmx_home))
+        .nest("/htmx/movies", movies_htmx_web_router)
+        .nest("/htmx/quotes", quotes_htmx_web_router)
         .nest("/htmx/interviews", interviews_htmx_web_router)
+        .nest("/api/v1", movies_api_router)
+        .nest("/api/v1", quotes_api_router)
+        .nest("/api/v1", interviews_api_router)
         .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", docs::ApiDoc::openapi()))
         .nest_service("/static", ServeDir::new("static"))
         .layer(
@@ -146,7 +82,17 @@ async fn main() {
                 )
             }),
         );
+    app_router
+}
+#[tokio::main]
+async fn main() {
+    let _ = dotenvy::dotenv();
 
+    init_tracing();
+
+    let db_store = Store::new().await;
+
+    let app = make_app_router(&db_store);
     let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
         .await
         .unwrap();
@@ -205,9 +151,8 @@ async fn hello_msg() -> Json<Msg> {
 mod tests {
     use super::*;
     use axum::response::IntoResponse;
-    use axum::{body::Body, http::Request};
     use http_body_util::BodyExt;
-    use tower::ServiceExt; // for `oneshot`
+    // for `oneshot`
 
     #[tokio::test]
     async fn test_hello_msg() {
