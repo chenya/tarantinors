@@ -3,6 +3,16 @@ name = "tarantino-rs"
 version = "0.1.0"
 edition = "2024"
 
+# web server
+[[bin]]
+name = "tarantinors"
+path = "src/main.rs"
+
+# CLI binary
+[[bin]]
+name = "tarantinors-cli"
+path = "src/cli/cli.rs"
+
 [dependencies]
 anyhow = "1.0.99"
 askama = "0.14.0"
@@ -28,3 +38,5 @@ validator = { version = "0.20.0", features = ["derive"] }
 http-body-util = "0.1.3"
 tower = "0.5.2"
 futures = "0.3.31"
+clap = { version = "4.5.54", features = ["derive"] }
+reqwest = { version = "0.13.1", features = ["json"] }
