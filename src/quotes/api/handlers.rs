@@ -6,7 +6,7 @@ use crate::quotes::api::models::{
     CreateQuoteRequest, QuoteListResponse, QuoteMessage, QuoteResponse,
 };
 use crate::quotes::api::service::ApiService;
-use crate::quotes::data::store::QuoteStore;
+
 use axum::Extension;
 use axum::Json;
 use axum::extract::Path;
@@ -14,6 +14,8 @@ use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use tracing::{error, info, instrument};
 use utoipa::OpenApi;
+use crate::store::Store;
+
 
 /// Create a new quote
 #[utoipa::path(
@@ -29,7 +31,7 @@ use utoipa::OpenApi;
 )]
 #[instrument]
 pub async fn add_new_quote(
-    Extension(store): Extension<QuoteStore>,
+    Extension(store): Extension<Store>,
     ValidatedJson(new_quote): ValidatedJson<CreateQuoteRequest>,
 ) -> impl IntoResponse {
     let service = ApiService::new(&store.connection);
@@ -54,7 +56,7 @@ pub async fn add_new_quote(
 )]
 #[instrument]
 pub async fn get_quote(
-    Extension(store): Extension<QuoteStore>,
+    Extension(store): Extension<Store>,
     Path(quote_id): Path<i32>,
 ) -> Result<impl IntoResponse, QuotesApiError> {
     // let movie = store.get_movie(movie_id).await?;
@@ -82,7 +84,7 @@ pub async fn get_quote(
 )]
 #[instrument]
 pub async fn get_quotes(
-    Extension(store): Extension<QuoteStore>,
+    Extension(store): Extension<Store>,
 ) -> Result<impl IntoResponse, QuotesApiError> {
     let service = ApiService::new(&store.connection);
 
@@ -105,7 +107,7 @@ pub async fn get_quotes(
 )]
 #[instrument]
 pub async fn remove_quote(
-    Extension(store): Extension<QuoteStore>,
+    Extension(store): Extension<Store>,
     Path(quote_id): Path<i32>,
 ) -> Result<impl IntoResponse, QuotesApiError> {
     let service = ApiService::new(&store.connection);

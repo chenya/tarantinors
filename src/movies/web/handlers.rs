@@ -1,5 +1,4 @@
 use crate::movies::{
-    data::store::MoviesStore,
     web::{
         errors::MoviesWebError,
         models::MovieViewModel,
@@ -15,9 +14,10 @@ use askama::Template;
 use axum::{Extension, extract::Path, http::StatusCode, response::Html};
 use tracing::{info, instrument};
 
+use crate::store::Store;
 #[instrument]
 pub async fn movie_details(
-    Extension(store): Extension<MoviesStore>,
+    Extension(store): Extension<Store>,
     Path(movie_id): Path<i32>,
 ) -> Result<Html<String>, MoviesWebError> {
     let service = WebService::new(&store.connection);
@@ -35,7 +35,7 @@ pub async fn movie_details(
 
 #[instrument]
 pub async fn list_movies(
-    Extension(store): Extension<MoviesStore>,
+    Extension(store): Extension<Store>,
 ) -> Result<Html<String>, MoviesWebError> {
     let service = WebService::new(&store.connection);
 
@@ -49,7 +49,7 @@ pub async fn list_movies(
 
 #[instrument]
 pub async fn htmx_movie_details(
-    Extension(store): Extension<MoviesStore>,
+    Extension(store): Extension<Store>,
     Path(movie_id): Path<i32>,
 ) -> Result<Html<String>, MoviesWebError> {
     let service = WebService::new(&store.connection);
@@ -67,7 +67,7 @@ pub async fn htmx_movie_details(
 
 #[instrument]
 pub async fn htmx_list_movies(
-    Extension(store): Extension<MoviesStore>,
+    Extension(store): Extension<Store>,
 ) -> Result<Html<String>, MoviesWebError> {
     let service = WebService::new(&store.connection);
 

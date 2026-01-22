@@ -141,6 +141,6 @@ pub struct MoviesMessage {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
-pub struct Movies {
+pub struct MovieListResponse {
     pub movies: Vec<MovieResponse>,
 }

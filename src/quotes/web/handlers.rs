@@ -1,18 +1,18 @@
 use crate::quotes::{
-    data::store::QuoteStore,
+
     web::{
         models::QuoteViewModel,
         service::WebService,
         templates::{HtmxQuotesTemplate, QuotesTemplate},
     },
 };
-
+use crate::store::Store;
 use askama::Template;
 use axum::{Extension, extract::Path, http::StatusCode, response::Html};
 use tracing::{info, instrument};
 
 #[instrument]
-pub async fn list_quotes(Extension(store): Extension<QuoteStore>) -> Html<String> {
+pub async fn list_quotes(Extension(store): Extension<Store>) -> Html<String> {
     let service = WebService::new(&store.connection);
 
     let quotes = service.get_quotes().await;
@@ -24,7 +24,7 @@ pub async fn list_quotes(Extension(store): Extension<QuoteStore>) -> Html<String
 }
 
 #[instrument]
-pub async fn htmx_list_quotes(Extension(store): Extension<QuoteStore>) -> Html<String> {
+pub async fn htmx_list_quotes(Extension(store): Extension<Store>) -> Html<String> {
     let service = WebService::new(&store.connection);
 
     let quotes = service.get_quotes().await;

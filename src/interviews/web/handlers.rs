@@ -1,5 +1,5 @@
 use crate::interviews::{
-    data::store::InterviewStore,
+
     web::{
         models::InterviewViewModel,
         service::WebService,
@@ -11,8 +11,10 @@ use askama::Template;
 use axum::{Extension, extract::Path, http::StatusCode, response::Html};
 use tracing::{info, instrument};
 
+use crate::store::Store;
+
 #[instrument]
-pub async fn list_interviews(Extension(store): Extension<InterviewStore>) -> Html<String> {
+pub async fn list_interviews(Extension(store): Extension<Store>) -> Html<String> {
     let service = WebService::new(&store.connection);
 
     let interviews = service.get_interviews().await;
@@ -24,7 +26,7 @@ pub async fn list_interviews(Extension(store): Extension<InterviewStore>) -> Htm
 }
 
 #[instrument]
-pub async fn htmx_list_interviews(Extension(store): Extension<InterviewStore>) -> Html<String> {
+pub async fn htmx_list_interviews(Extension(store): Extension<Store>) -> Html<String> {
     let service = WebService::new(&store.connection);
 
     let interviews = service.get_interviews().await;

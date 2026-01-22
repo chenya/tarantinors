@@ -6,9 +6,9 @@ use axum::{
     Extension, Router,
     routing::{delete, get, post},
 };
-use data::store::MoviesStore;
 
-pub fn rest_api_router(movie_store: MoviesStore) -> Router {
+use crate::store::Store;
+pub fn rest_api_router(movie_store: &Store) -> Router {
     let router = Router::new()
         .route("/movies", get(api::handlers::get_movies))
         .route("/movies", post(api::handlers::add_movie))
@@ -39,25 +39,25 @@ pub fn rest_api_router(movie_store: MoviesStore) -> Router {
         )
         .route("/movies/{movie_id}", delete(api::handlers::remove_movie))
         .fallback(api::handlers::fallback_handler)
-        .layer(Extension(movie_store));
+        .layer(Extension(movie_store.clone()));
 
     router
 }
 
-pub fn web_router(movie_store: MoviesStore) -> Router {
+pub fn web_router(movie_store: &Store) -> Router {
     let router = Router::new()
         .route("/", get(web::handlers::list_movies))
         .route("/{movie_id}", get(web::handlers::movie_details))
-        .layer(Extension(movie_store));
+        .layer(Extension(movie_store.clone()));
 
     router
 }
 
-pub fn htmx_web_router(movie_store: MoviesStore) -> Router {
+pub fn htmx_web_router(movie_store: &Store) -> Router {
     let router = Router::new()
         .route("/", get(web::handlers::htmx_list_movies))
         .route("/{movie_id}", get(web::handlers::htmx_movie_details))
-        .layer(Extension(movie_store));
+        .layer(Extension(movie_store.clone()));
 
     router
 }

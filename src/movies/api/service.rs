@@ -3,8 +3,8 @@ use crate::movies::api::models::{
     CreateMovieRequest, MovieAwardNominationResponse, MovieAwardResponse, MovieResponse,
 };
 use crate::movies::data::repository::MovieRepository;
-use futures::TryStreamExt;
 use futures::stream::{self, StreamExt};
+use futures::TryStreamExt;
 use sqlx::PgPool;
 pub struct ApiService {
     repo: MovieRepository,
@@ -147,29 +147,21 @@ impl ApiService {
             Some(m) => m,
         };
 
-        // 2. Roles
-        // Director
-        let directors = self.get_movie_directors(movie_id).await?;
-        // Producers
-        let producers = self.get_movie_producers(movie_id).await?;
-        // Writers
-        let writers = self.get_movie_writers(movie_id).await?;
-        // Actors
-        let actors = self.get_movie_actors(movie_id).await?;
-
-        // 4. Awards
-        let awards = self.get_movie_awards(movie_id).await?;
-
-        // 5. Nominations
-        let nominations = self.get_movie_nominations(movie_id).await?;
-
-        // 6. Genre
-        let movie_genre = self.repo.get_movie_genre(movie_id).await?;
+        // 2-7. Fetch all data concurrently without existence checks
+        let (directors, producers, writers, actors, awards, nominations, movie_genre) = tokio::join!(
+            self.get_movie_directors_unchecked(movie_id),
+            self.get_movie_producers_unchecked(movie_id),
+            self.get_movie_writers_unchecked(movie_id),
+            self.get_movie_actors_unchecked(movie_id),
+            self.get_movie_awards_unchecked(movie_id),
+            self.get_movie_nominations_unchecked(movie_id),
+            self.repo.get_movie_genre(movie_id)
+        );
 
         let movie_response = MovieResponse {
             title: movie.title,
             release_year: movie.release_year,
-            genre: movie_genre.name,
+            genre: movie_genre?.name,
             plot: movie.plot,
             runtime: movie.runtime,
             rating: movie.rating,
@@ -178,12 +170,12 @@ impl ApiService {
             youtube_id: movie.youtube_id,
             budget: movie.budget,
             production_details: movie.production_details,
-            directors,
-            producers,
-            actors,
-            writers,
-            awards,
-            nominations,
+            directors: directors?,
+            producers: producers?,
+            actors: actors?,
+            writers: writers?,
+            awards: awards?,
+            nominations: nominations?,
         };
         Ok(Some(movie_response))
     }
@@ -271,6 +263,81 @@ impl ApiService {
     ) -> Result<Vec<MovieAwardNominationResponse>, MoviesApiError> {
         self.movie_exists_guard(movie_id).await?;
 
+        let nominations = self
+            .repo
+            .get_movie_awards_nominations(movie_id)
+            .await?
+            .into_iter()
+            .map(|a| MovieAwardNominationResponse {
+                name: a.name,
+                category: a.category,
+                year: a.year,
+                nominee: a.nominee,
+            })
+            .collect();
+
+        Ok(nominations)
+    }
+
+    async fn get_movie_actors_unchecked(
+        &self,
+        movie_id: i32,
+    ) -> Result<Vec<String>, MoviesApiError> {
+        let actors = self.repo.get_movie_actors_names(movie_id).await?;
+        Ok(actors)
+    }
+
+    async fn get_movie_directors_unchecked(
+        &self,
+        movie_id: i32,
+    ) -> Result<Vec<String>, MoviesApiError> {
+        let directors = self.repo.get_movie_directors_names(movie_id).await?;
+
+        Ok(directors)
+    }
+
+    async fn get_movie_writers_unchecked(
+        &self,
+        movie_id: i32,
+    ) -> Result<Vec<String>, MoviesApiError> {
+        let writers = self.repo.get_movie_writers_names(movie_id).await?;
+
+        Ok(writers)
+    }
+
+    async fn get_movie_producers_unchecked(
+        &self,
+        movie_id: i32,
+    ) -> Result<Vec<String>, MoviesApiError> {
+        let producers = self.repo.get_movie_producers_names(movie_id).await?;
+
+        Ok(producers)
+    }
+
+    async fn get_movie_awards_unchecked(
+        &self,
+        movie_id: i32,
+    ) -> Result<Vec<MovieAwardResponse>, MoviesApiError> {
+        let awards = self
+            .repo
+            .get_movie_awards_won(movie_id)
+            .await?
+            .into_iter()
+            .map(|a| MovieAwardResponse {
+                name: a.name,
+                category: a.category,
+                year: a.year,
+                recipient: a.recipient,
+            })
+            .collect();
+
+        Ok(awards)
+    }
+
+    async fn get_movie_nominations_unchecked(
+        &self,
+        movie_id: i32,
+    ) -> Result<Vec<MovieAwardNominationResponse>, MoviesApiError> {
         let nominations = self
             .repo
             .get_movie_awards_nominations(movie_id)

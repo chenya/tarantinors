@@ -65,7 +65,7 @@ impl QuotesApiError {
             Self::DatabaseError(_) => None,
             Self::InternalError(_) => None,
             Self::Validation(errors) => {
-                let field_errors = extract_field_errors(&errors);
+                let field_errors = self.extract_field_errors(&errors);
                 let error_count = field_errors.values().map(|v| v.len()).sum();
 
                 Some(ValidationDetails {
@@ -75,6 +75,28 @@ impl QuotesApiError {
             }
         }
     }
+
+
+    fn extract_field_errors(&self, errors: &ValidationErrors) -> HashMap<String, Vec<String>> {
+        errors
+            .field_errors()
+            .iter()
+            .map(|(field, field_errors)| {
+                let messages = field_errors
+                    .iter()
+                    .map(|error| {
+                        error
+                            .message
+                            .as_ref()
+                            .map(|cow| cow.to_string())
+                            .unwrap_or_else(|| "Invalid value".to_string())
+                    })
+                    .collect();
+                (field.to_string(), messages)
+            })
+            .collect()
+    }
+
 
     pub fn log_message(&self) -> String {
         format!("{:?}", self)
@@ -99,22 +121,3 @@ impl IntoResponse for QuotesApiError {
     }
 }
 
-fn extract_field_errors(errors: &ValidationErrors) -> HashMap<String, Vec<String>> {
-    errors
-        .field_errors()
-        .iter()
-        .map(|(field, field_errors)| {
-            let messages = field_errors
-                .iter()
-                .map(|error| {
-                    error
-                        .message
-                        .as_ref()
-                        .map(|cow| cow.to_string())
-                        .unwrap_or_else(|| "Invalid value".to_string())
-                })
-                .collect();
-            (field.to_string(), messages)
-        })
-        .collect()
-}

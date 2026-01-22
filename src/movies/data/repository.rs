@@ -385,14 +385,6 @@ impl MovieRepository {
         .await?;
 
         Ok(persons)
-        // match persons.is_empty() {
-        //     true => Ok(vec![]),
-        // true => Err(MoviesApiError::NoPersonsFoundForRole(
-        //     role.to_string(),
-        //     movie_id,
-        // )),
-        // false => Ok(persons),
-        // }
     }
 
     async fn get_persons_names_by_role(

@@ -7,7 +7,7 @@ use crate::interviews::{
         },
         service::ApiService,
     },
-    data::store::InterviewStore,
+
 };
 
 use axum::Extension;
@@ -17,6 +17,8 @@ use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use tracing::{error, info, instrument};
 use utoipa::OpenApi;
+use crate::store::Store;
+
 
 /// Create a new Interview
 #[utoipa::path(
@@ -32,7 +34,7 @@ use utoipa::OpenApi;
 )]
 #[instrument]
 pub async fn add_new_interview(
-    Extension(store): Extension<InterviewStore>,
+    Extension(store): Extension<Store>,
     ValidatedJson(new_interview): ValidatedJson<CreateInterviewRequest>,
 ) -> Result<impl IntoResponse, InterviewsApiError> {
     let service = ApiService::new(&store.connection);
@@ -57,7 +59,7 @@ pub async fn add_new_interview(
 )]
 #[instrument]
 pub async fn get_interview(
-    Extension(store): Extension<InterviewStore>,
+    Extension(store): Extension<Store>,
     Path(interview_id): Path<i32>,
 ) -> Result<impl IntoResponse, InterviewsApiError> {
     // let movie = store.get_movie(movie_id).await?;
@@ -85,7 +87,7 @@ pub async fn get_interview(
 )]
 #[instrument]
 pub async fn get_interviews(
-    Extension(store): Extension<InterviewStore>,
+    Extension(store): Extension<Store>,
 ) -> Result<impl IntoResponse, InterviewsApiError> {
     let service = ApiService::new(&store.connection);
 
@@ -108,7 +110,7 @@ pub async fn get_interviews(
 )]
 #[instrument]
 pub async fn remove_interview(
-    Extension(store): Extension<InterviewStore>,
+    Extension(store): Extension<Store>,
     Path(interview_id): Path<i32>,
 ) -> Result<impl IntoResponse, InterviewsApiError> {
     let service = ApiService::new(&store.connection);

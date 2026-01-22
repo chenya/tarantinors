@@ -3,10 +3,11 @@ use crate::movies::api::extractors::ValidatedJson;
 use crate::movies::api::models::{
     Actors, CreateMovieAwardNominationRequest, CreateMovieAwardRequest, CreateMovieRequest,
     Directors, MovieAwardNominationResponse, MovieAwardResponse, MovieAwardsResponse,
-    MovieNominationsResponse, MovieResponse, Movies, MoviesMessage, Producers, Writers,
+    MovieListResponse, MovieNominationsResponse, MovieResponse, MoviesMessage, Producers, Writers,
 };
 use crate::movies::api::service::ApiService;
-use crate::movies::data::store::MoviesStore;
+
+use crate::store::Store;
 use axum::Extension;
 use axum::Json;
 use axum::extract::Path;
@@ -30,7 +31,7 @@ use utoipa::OpenApi;
 )]
 #[instrument]
 pub async fn add_movie(
-    Extension(store): Extension<MoviesStore>,
+    Extension(store): Extension<Store>,
     ValidatedJson(new_movie): ValidatedJson<CreateMovieRequest>,
 ) -> Result<impl IntoResponse, MoviesApiError> {
     let movie_title = new_movie.title.clone();
@@ -55,7 +56,7 @@ pub async fn add_movie(
 )]
 #[instrument]
 pub async fn get_movie(
-    Extension(store): Extension<MoviesStore>,
+    Extension(store): Extension<Store>,
     Path(movie_id): Path<i32>,
 ) -> Result<Json<MovieResponse>, MoviesApiError> {
     // let movie = store.get_movie(movie_id).await?;
@@ -65,7 +66,7 @@ pub async fn get_movie(
     let movie = service
         .get_movie(movie_id)
         .await?
-        .ok_or(MoviesApiError::MovieNotFound(movie_id))?;
+        .ok_or_else(|| MoviesApiError::MovieNotFound(movie_id))?;
 
     info!("queried movie {movie_id}");
     Ok(Json(movie))
@@ -76,20 +77,20 @@ pub async fn get_movie(
     get,
     path = "/movies",
     responses(
-        (status = 200, description = "List of Movies", body = Movies),
+        (status = 200, description = "List of Movies", body = MovieListResponse),
         (status = 500, description = "Database server error", body = ApiErrorResponse)
     ),
     tag = "Movies API"
 )]
 #[instrument]
 pub async fn get_movies(
-    Extension(store): Extension<MoviesStore>,
-) -> Result<Json<Movies>, MoviesApiError> {
+    Extension(store): Extension<Store>,
+) -> Result<Json<MovieListResponse>, MoviesApiError> {
     // let movies = store.get_movies().await?;
     let service = ApiService::new(&store.connection);
     let movies = service.get_movies().await?;
     info!("queried all movies");
-    Ok(Json::from(Movies { movies }))
+    Ok(Json::from(MovieListResponse { movies }))
 }
 
 /// Get movie actors by ID
@@ -105,7 +106,7 @@ pub async fn get_movies(
 )]
 #[instrument]
 pub async fn get_movie_actors(
-    Extension(store): Extension<MoviesStore>,
+    Extension(store): Extension<Store>,
     Path(movie_id): Path<i32>,
 ) -> Result<Json<Actors>, MoviesApiError> {
     let service = ApiService::new(&store.connection);
@@ -131,7 +132,7 @@ pub async fn get_movie_actors(
 )]
 #[instrument]
 pub async fn get_movie_directors(
-    Extension(store): Extension<MoviesStore>,
+    Extension(store): Extension<Store>,
     Path(movie_id): Path<i32>,
 ) -> Result<Json<Directors>, MoviesApiError> {
     let service = ApiService::new(&store.connection);
@@ -156,7 +157,7 @@ pub async fn get_movie_directors(
 )]
 #[instrument]
 pub async fn get_movie_producers(
-    Extension(store): Extension<MoviesStore>,
+    Extension(store): Extension<Store>,
     Path(movie_id): Path<i32>,
 ) -> Result<Json<Producers>, MoviesApiError> {
     let service = ApiService::new(&store.connection);
@@ -181,7 +182,7 @@ pub async fn get_movie_producers(
 )]
 #[instrument]
 pub async fn get_movie_writers(
-    Extension(store): Extension<MoviesStore>,
+    Extension(store): Extension<Store>,
     Path(movie_id): Path<i32>,
 ) -> Result<Json<Writers>, MoviesApiError> {
     let service = ApiService::new(&store.connection);
@@ -206,7 +207,7 @@ pub async fn get_movie_writers(
 )]
 #[instrument]
 pub async fn get_movie_awards(
-    Extension(store): Extension<MoviesStore>,
+    Extension(store): Extension<Store>,
     Path(movie_id): Path<i32>,
 ) -> Result<Json<MovieAwardsResponse>, MoviesApiError> {
     let service = ApiService::new(&store.connection);
@@ -236,7 +237,7 @@ pub async fn get_movie_awards(
 )]
 #[instrument]
 pub async fn get_movie_nominations(
-    Extension(store): Extension<MoviesStore>,
+    Extension(store): Extension<Store>,
     Path(movie_id): Path<i32>,
 ) -> Result<Json<MovieNominationsResponse>, MoviesApiError> {
     let service = ApiService::new(&store.connection);
@@ -265,7 +266,7 @@ pub async fn get_movie_nominations(
 )]
 #[instrument]
 pub async fn remove_movie(
-    Extension(store): Extension<MoviesStore>,
+    Extension(store): Extension<Store>,
     Path(movie_id): Path<i32>,
 ) -> Result<Json<MoviesMessage>, MoviesApiError> {
     let service = ApiService::new(&store.connection);
@@ -317,7 +318,7 @@ pub async fn fallback_handler(uri: axum::http::Uri) -> impl IntoResponse {
         MovieAwardsResponse,
         MovieNominationsResponse,
         MoviesMessage,
-        Movies,
+        MovieListResponse,
     )),
     modifiers()
 )]
